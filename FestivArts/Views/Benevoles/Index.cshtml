@@ -1,0 +1,68 @@
+﻿@model IEnumerable<FestivArts.Models.Entity.Benevole>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Prenom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tel)
+        </th>
+        <th>
+            Infos
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Permis)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Prenom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tel)
+        </td>
+        <td>
+            <span class="label  label-success">
+                D @Html.DisplayFor(modelItem => item.DispoCount)
+            </span>
+            &nbsp;
+            @if (item.ModifCount > 0) { 
+            <span class="label label-info">
+                M @Html.DisplayFor(modelItem => item.ModifCount)
+            </span>
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Permis)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) 
+        </td>
+    </tr>
+}
+
+</table>

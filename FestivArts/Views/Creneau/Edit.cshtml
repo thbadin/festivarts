@@ -1,0 +1,101 @@
+﻿@model FestivArts.ViewModels.CreneauDefViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>CreneauDefViewModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Tache.Nom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tache.Nom)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Tache.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tache.Description)
+            </dd>
+
+
+        </dl>
+        <div class="form-group">
+            @foreach (int i in Model.Creneaux.Keys)
+            {
+                <div class="col-md-3">
+                    <p> @ViewBag.Jours[i].Nom </p>
+                    <ul class="list-group">
+                        @foreach (int j in Model.Creneaux[i].Keys.OrderBy( s=> s) )
+                {
+                    <li class="list-group-item">
+                        <div class="row">
+                            <span class="col-md-2">#@j </span>
+                                  @if (@Model.Creneaux[i][j].NbBenevoleMin > 0) { <span class="label label-success col-md-2">
+                                    @Model.Creneaux[i][j].CreneauDef.Debut.ToString("HH:mm")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="label label-warning  col-md-2"> 
+                                    @Model.Creneaux[i][j].CreneauDef.Debut.ToString("HH:mm")
+                                </span>
+                            }
+                            <span class="col-md-1">
+                                <input type="text" value="@Model.Creneaux[i][j].NbBenevoleMin" name="Creneaux[@i][@j].NbBenevoleMin" style="width:20px;" />
+                            </span>
+                            <span class="col-md-3" >&le; B &ge;</span>
+                            <span class="col-md-1">
+                                <input type="text" value="@Model.Creneaux[i][j].NbBenevoleMax" name="Creneaux[@i][@j].NbBenevoleMax" style="width:20px;" />
+                            </span>
+                             &nbsp;
+                            <button type="button" class="btn btn-default" aria-label="Left Align" onclick="copyData(@i,@j)">
+                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </li>
+                }
+                    </ul>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+            <div>
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+@section scripts {
+
+<script type="text/javascript">
+    function copyData(i, j) {
+        var min = $("[name='Creneaux[" + i + "][" + j + "].NbBenevoleMin'").val();
+        var max = $("[name='Creneaux[" + i + "][" + j + "].NbBenevoleMax'").val();
+        $("[name='Creneaux[" + i + "][" + (j + 1) + "].NbBenevoleMin'").val(min);
+        $("[name='Creneaux[" + i + "][" + (j + 1) + "].NbBenevoleMax'").val(max);
+    }
+</script>
+
+}

@@ -1,0 +1,863 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="festivartsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Affectation">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="CreneauId" />
+            <PropertyRef Name="PlanningId" />
+          </Key>
+          <Property Name="BenevoleId" Type="int" Nullable="false" />
+          <Property Name="CreneauId" Type="int" Nullable="false" />
+          <Property Name="PlanningId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Benevole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Prenom" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Tel" Type="varchar" MaxLength="15" />
+          <Property Name="Commentaire" Type="text" />
+          <Property Name="Permis" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CommentaireDispo">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="JourId" />
+          </Key>
+          <Property Name="BenevoleId" Type="int" Nullable="false" />
+          <Property Name="JourId" Type="int" Nullable="false" />
+          <Property Name="Commentaire" Type="text" />
+        </EntityType>
+        <EntityType Name="Conf">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="IsCurrent" Type="bit" Nullable="false" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" />
+          <Property Name="DureeCreneauMinute" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Creneau">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreneauDefId" Type="int" Nullable="false" />
+          <Property Name="TacheId" Type="int" Nullable="false" />
+          <Property Name="NbBenevoleMin" Type="int" Nullable="false" />
+          <Property Name="NbBenevoleMax" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CreneauDef">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JourId" Type="int" Nullable="false" />
+          <Property Name="NoCreneau" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Dispo">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="CreneauDefId" />
+          </Key>
+          <Property Name="BenevoleId" Type="int" Nullable="false" />
+          <Property Name="CreneauDefId" Type="int" Nullable="false" />
+          <Property Name="EstDispo" Type="bit" Nullable="false" />
+          <Property Name="ModifManuel" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JourEvenement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="text" />
+          <Property Name="DateDebut" Type="datetime" Nullable="false" />
+          <Property Name="DateFin" Type="datetime" Nullable="false" />
+          <Property Name="Ordre" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Planning">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Preference">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="TypeTacheId" />
+          </Key>
+          <Property Name="BenevoleId" Type="int" Nullable="false" />
+          <Property Name="TypeTacheId" Type="int" Nullable="false" />
+          <Property Name="Preference" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nom" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="text" />
+          <Property Name="TypeTacheId" Type="int" Nullable="false" />
+          <Property Name="Ordre" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TypeTache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="text" />
+          <Property Name="Ordre" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Affectation_Benevole">
+          <End Role="Benevole" Type="Self.Benevole" Multiplicity="1" />
+          <End Role="Affectation" Type="Self.Affectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Affectation">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Affectation_Creneau">
+          <End Role="Creneau" Type="Self.Creneau" Multiplicity="1" />
+          <End Role="Affectation" Type="Self.Affectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creneau">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Affectation">
+              <PropertyRef Name="CreneauId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Affectation_Planning">
+          <End Role="Planning" Type="Self.Planning" Multiplicity="1" />
+          <End Role="Affectation" Type="Self.Affectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planning">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Affectation">
+              <PropertyRef Name="PlanningId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommentaireDispo_Benevole">
+          <End Role="Benevole" Type="Self.Benevole" Multiplicity="1" />
+          <End Role="CommentaireDispo" Type="Self.CommentaireDispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentaireDispo">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommentaireDispo_JourEvenement">
+          <End Role="JourEvenement" Type="Self.JourEvenement" Multiplicity="1" />
+          <End Role="CommentaireDispo" Type="Self.CommentaireDispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JourEvenement">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentaireDispo">
+              <PropertyRef Name="JourId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Creneau_CreneauDef">
+          <End Role="CreneauDef" Type="Self.CreneauDef" Multiplicity="1" />
+          <End Role="Creneau" Type="Self.Creneau" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreneauDef">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Creneau">
+              <PropertyRef Name="CreneauDefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Creneau_Tache">
+          <End Role="Tache" Type="Self.Tache" Multiplicity="1" />
+          <End Role="Creneau" Type="Self.Creneau" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tache">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Creneau">
+              <PropertyRef Name="TacheId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreneauDef_JourEvenement">
+          <End Role="JourEvenement" Type="Self.JourEvenement" Multiplicity="1" />
+          <End Role="CreneauDef" Type="Self.CreneauDef" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JourEvenement">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreneauDef">
+              <PropertyRef Name="JourId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dispo_Benevole">
+          <End Role="Benevole" Type="Self.Benevole" Multiplicity="1" />
+          <End Role="Dispo" Type="Self.Dispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dispo">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dispo_CreneauDef">
+          <End Role="CreneauDef" Type="Self.CreneauDef" Multiplicity="1" />
+          <End Role="Dispo" Type="Self.Dispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreneauDef">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dispo">
+              <PropertyRef Name="CreneauDefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Preference_Benevole">
+          <End Role="Benevole" Type="Self.Benevole" Multiplicity="1" />
+          <End Role="Preference" Type="Self.Preference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Preference">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Preference_TypeTache">
+          <End Role="TypeTache" Type="Self.TypeTache" Multiplicity="1" />
+          <End Role="Preference" Type="Self.Preference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeTache">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Preference">
+              <PropertyRef Name="TypeTacheId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tache_TypeTache">
+          <End Role="TypeTache" Type="Self.TypeTache" Multiplicity="1" />
+          <End Role="Tache" Type="Self.Tache" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeTache">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tache">
+              <PropertyRef Name="TypeTacheId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="festivartsModelStoreContainer">
+          <EntitySet Name="Affectation" EntityType="Self.Affectation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Benevole" EntityType="Self.Benevole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CommentaireDispo" EntityType="Self.CommentaireDispo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Conf" EntityType="Self.Conf" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Creneau" EntityType="Self.Creneau" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CreneauDef" EntityType="Self.CreneauDef" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dispo" EntityType="Self.Dispo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JourEvenement" EntityType="Self.JourEvenement" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Planning" EntityType="Self.Planning" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Preference" EntityType="Self.Preference" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tache" EntityType="Self.Tache" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TypeTache" EntityType="Self.TypeTache" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Affectation_Benevole" Association="Self.FK_Affectation_Benevole">
+            <End Role="Benevole" EntitySet="Benevole" />
+            <End Role="Affectation" EntitySet="Affectation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Affectation_Creneau" Association="Self.FK_Affectation_Creneau">
+            <End Role="Creneau" EntitySet="Creneau" />
+            <End Role="Affectation" EntitySet="Affectation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Affectation_Planning" Association="Self.FK_Affectation_Planning">
+            <End Role="Planning" EntitySet="Planning" />
+            <End Role="Affectation" EntitySet="Affectation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommentaireDispo_Benevole" Association="Self.FK_CommentaireDispo_Benevole">
+            <End Role="Benevole" EntitySet="Benevole" />
+            <End Role="CommentaireDispo" EntitySet="CommentaireDispo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommentaireDispo_JourEvenement" Association="Self.FK_CommentaireDispo_JourEvenement">
+            <End Role="JourEvenement" EntitySet="JourEvenement" />
+            <End Role="CommentaireDispo" EntitySet="CommentaireDispo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creneau_CreneauDef" Association="Self.FK_Creneau_CreneauDef">
+            <End Role="CreneauDef" EntitySet="CreneauDef" />
+            <End Role="Creneau" EntitySet="Creneau" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creneau_Tache" Association="Self.FK_Creneau_Tache">
+            <End Role="Tache" EntitySet="Tache" />
+            <End Role="Creneau" EntitySet="Creneau" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreneauDef_JourEvenement" Association="Self.FK_CreneauDef_JourEvenement">
+            <End Role="JourEvenement" EntitySet="JourEvenement" />
+            <End Role="CreneauDef" EntitySet="CreneauDef" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dispo_Benevole" Association="Self.FK_Dispo_Benevole">
+            <End Role="Benevole" EntitySet="Benevole" />
+            <End Role="Dispo" EntitySet="Dispo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dispo_CreneauDef" Association="Self.FK_Dispo_CreneauDef">
+            <End Role="CreneauDef" EntitySet="CreneauDef" />
+            <End Role="Dispo" EntitySet="Dispo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preference_Benevole" Association="Self.FK_Preference_Benevole">
+            <End Role="Benevole" EntitySet="Benevole" />
+            <End Role="Preference" EntitySet="Preference" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preference_TypeTache" Association="Self.FK_Preference_TypeTache">
+            <End Role="TypeTache" EntitySet="TypeTache" />
+            <End Role="Preference" EntitySet="Preference" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tache_TypeTache" Association="Self.FK_Tache_TypeTache">
+            <End Role="TypeTache" EntitySet="TypeTache" />
+            <End Role="Tache" EntitySet="Tache" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FestivArts.Models.Entity" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Benevole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Prenom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Tel" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Commentaire" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Dispoes" Relationship="Self.FK_Dispo_Benevole" FromRole="Benevole" ToRole="Dispo" />
+          <NavigationProperty Name="Preferences" Relationship="Self.FK_Preference_Benevole" FromRole="Benevole" ToRole="Preference" />
+          <Property Name="Permis" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CommentaireDispoes" Relationship="FestivArts.Models.Entity.FK_CommentaireDispo_Benevole" FromRole="Benevole" ToRole="CommentaireDispo" />
+          <NavigationProperty Name="Affectations" Relationship="FestivArts.Models.Entity.FK_Affectation_Benevole" FromRole="Benevole" ToRole="Affectation" />
+        </EntityType>
+        <EntityType Name="Conf">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="IsCurrent" Type="Boolean" Nullable="false" />
+          <Property Name="Nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DureeCreneauMinute" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Creneau">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreneauDefId" Type="Int32" Nullable="false" />
+          <Property Name="TacheId" Type="Int32" Nullable="false" />
+          <Property Name="NbBenevoleMin" Type="Int32" Nullable="false" />
+          <Property Name="NbBenevoleMax" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CreneauDef" Relationship="Self.FK_Creneau_CreneauDef" FromRole="Creneau" ToRole="CreneauDef" />
+          <NavigationProperty Name="Tache" Relationship="FestivArts.Models.Entity.FK_Creneau_Tache1" FromRole="Creneau" ToRole="Tache" />
+          <NavigationProperty Name="Affectations" Relationship="FestivArts.Models.Entity.FK_Affectation_Creneau" FromRole="Creneau" ToRole="Affectation" />
+        </EntityType>
+        <EntityType Name="CreneauDef">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JourId" Type="Int32" Nullable="false" />
+          <Property Name="NoCreneau" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Creneaux" Relationship="Self.FK_Creneau_CreneauDef" FromRole="CreneauDef" ToRole="Creneau" />
+          <NavigationProperty Name="JourEvenement" Relationship="Self.FK_CreneauDef_JourEvenement" FromRole="CreneauDef" ToRole="JourEvenement" />
+          <NavigationProperty Name="Dispoes" Relationship="Self.FK_Dispo_CreneauDef" FromRole="CreneauDef" ToRole="Dispo" />
+        </EntityType>
+        <EntityType Name="Dispo">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="CreneauDefId" />
+          </Key>
+          <Property Name="BenevoleId" Type="Int32" Nullable="false" />
+          <Property Name="CreneauDefId" Type="Int32" Nullable="false" />
+          <Property Name="EstDispo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Benevole" Relationship="Self.FK_Dispo_Benevole" FromRole="Dispo" ToRole="Benevole" />
+          <NavigationProperty Name="CreneauDef" Relationship="Self.FK_Dispo_CreneauDef" FromRole="Dispo" ToRole="CreneauDef" />
+          <Property Name="ModifManuel" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JourEvenement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CreneauDefs" Relationship="Self.FK_CreneauDef_JourEvenement" FromRole="JourEvenement" ToRole="CreneauDef" />
+          <Property Name="Ordre" Type="Int32" Nullable="false" />
+          <Property Name="DateDebut" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateFin" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CommentaireDispoes" Relationship="FestivArts.Models.Entity.FK_CommentaireDispo_JourEvenement" FromRole="JourEvenement" ToRole="CommentaireDispo" />
+        </EntityType>
+        <EntityType Name="Preference">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="TypeTacheId" />
+          </Key>
+          <Property Name="BenevoleId" Type="Int32" Nullable="false" />
+          <Property Name="TypeTacheId" Type="Int32" Nullable="false" />
+          <Property Name="Valeur" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Benevole" Relationship="Self.FK_Preference_Benevole" FromRole="Preference" ToRole="Benevole" />
+          <NavigationProperty Name="TypeTache" Relationship="Self.FK_Preference_TypeTache" FromRole="Preference" ToRole="TypeTache" />
+        </EntityType>
+        <EntityType Name="Tache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nom" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TypeTacheId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TypeTache" Relationship="Self.FK_Tache_TypeTache" FromRole="Tache" ToRole="TypeTache" />
+          <Property Name="Ordre" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Creneaux" Relationship="FestivArts.Models.Entity.FK_Creneau_Tache1" FromRole="Tache" ToRole="Creneau" />
+        </EntityType>
+        <EntityType Name="TypeTache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Preferences" Relationship="Self.FK_Preference_TypeTache" FromRole="TypeTache" ToRole="Preference" />
+          <NavigationProperty Name="Taches" Relationship="Self.FK_Tache_TypeTache" FromRole="TypeTache" ToRole="Tache" />
+          <Property Name="Ordre" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Dispo_Benevole">
+          <End Role="Benevole" Type="Self.Benevole" Multiplicity="1" />
+          <End Role="Dispo" Type="Self.Dispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dispo">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Preference_Benevole">
+          <End Role="Benevole" Type="Self.Benevole" Multiplicity="1" />
+          <End Role="Preference" Type="Self.Preference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Preference">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Creneau_CreneauDef">
+          <End Role="CreneauDef" Type="Self.CreneauDef" Multiplicity="1" />
+          <End Role="Creneau" Type="Self.Creneau" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreneauDef">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Creneau">
+              <PropertyRef Name="CreneauDefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreneauDef_JourEvenement">
+          <End Role="JourEvenement" Type="Self.JourEvenement" Multiplicity="1" />
+          <End Role="CreneauDef" Type="Self.CreneauDef" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JourEvenement">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CreneauDef">
+              <PropertyRef Name="JourId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dispo_CreneauDef">
+          <End Role="CreneauDef" Type="Self.CreneauDef" Multiplicity="1" />
+          <End Role="Dispo" Type="Self.Dispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreneauDef">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dispo">
+              <PropertyRef Name="CreneauDefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Preference_TypeTache">
+          <End Role="TypeTache" Type="Self.TypeTache" Multiplicity="1" />
+          <End Role="Preference" Type="Self.Preference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeTache">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Preference">
+              <PropertyRef Name="TypeTacheId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tache_TypeTache">
+          <End Role="TypeTache" Type="Self.TypeTache" Multiplicity="1" />
+          <End Role="Tache" Type="Self.Tache" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeTache">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tache">
+              <PropertyRef Name="TypeTacheId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FestivArtsContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Benevoles" EntityType="Self.Benevole" />
+          <EntitySet Name="Confs" EntityType="Self.Conf" />
+          <EntitySet Name="Creneaux" EntityType="Self.Creneau" />
+          <EntitySet Name="CreneauDefs" EntityType="Self.CreneauDef" />
+          <EntitySet Name="Dispoes" EntityType="Self.Dispo" />
+          <EntitySet Name="JourEvenements" EntityType="Self.JourEvenement" />
+          <EntitySet Name="Preferences" EntityType="Self.Preference" />
+          <EntitySet Name="Taches" EntityType="Self.Tache" />
+          <EntitySet Name="TypeTaches" EntityType="Self.TypeTache" />
+          <AssociationSet Name="FK_Dispo_Benevole" Association="Self.FK_Dispo_Benevole">
+            <End Role="Benevole" EntitySet="Benevoles" />
+            <End Role="Dispo" EntitySet="Dispoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preference_Benevole" Association="Self.FK_Preference_Benevole">
+            <End Role="Benevole" EntitySet="Benevoles" />
+            <End Role="Preference" EntitySet="Preferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creneau_CreneauDef" Association="Self.FK_Creneau_CreneauDef">
+            <End Role="CreneauDef" EntitySet="CreneauDefs" />
+            <End Role="Creneau" EntitySet="Creneaux" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreneauDef_JourEvenement" Association="Self.FK_CreneauDef_JourEvenement">
+            <End Role="JourEvenement" EntitySet="JourEvenements" />
+            <End Role="CreneauDef" EntitySet="CreneauDefs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dispo_CreneauDef" Association="Self.FK_Dispo_CreneauDef">
+            <End Role="CreneauDef" EntitySet="CreneauDefs" />
+            <End Role="Dispo" EntitySet="Dispoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preference_TypeTache" Association="Self.FK_Preference_TypeTache">
+            <End Role="TypeTache" EntitySet="TypeTaches" />
+            <End Role="Preference" EntitySet="Preferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tache_TypeTache" Association="Self.FK_Tache_TypeTache">
+            <End Role="TypeTache" EntitySet="TypeTaches" />
+            <End Role="Tache" EntitySet="Taches" />
+          </AssociationSet>
+          <EntitySet Name="CommentaireDispoes" EntityType="FestivArts.Models.Entity.CommentaireDispo" />
+          <AssociationSet Name="FK_CommentaireDispo_Benevole" Association="FestivArts.Models.Entity.FK_CommentaireDispo_Benevole">
+            <End Role="Benevole" EntitySet="Benevoles" />
+            <End Role="CommentaireDispo" EntitySet="CommentaireDispoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommentaireDispo_JourEvenement" Association="FestivArts.Models.Entity.FK_CommentaireDispo_JourEvenement">
+            <End Role="JourEvenement" EntitySet="JourEvenements" />
+            <End Role="CommentaireDispo" EntitySet="CommentaireDispoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creneau_Tache1" Association="FestivArts.Models.Entity.FK_Creneau_Tache1">
+            <End Role="Tache" EntitySet="Taches" />
+            <End Role="Creneau" EntitySet="Creneaux" />
+          </AssociationSet>
+          <EntitySet Name="Plannings" EntityType="FestivArts.Models.Entity.Planning" />
+          <EntitySet Name="Affectations" EntityType="FestivArts.Models.Entity.Affectation" />
+          <AssociationSet Name="FK_Affectation_Benevole" Association="FestivArts.Models.Entity.FK_Affectation_Benevole">
+            <End Role="Benevole" EntitySet="Benevoles" />
+            <End Role="Affectation" EntitySet="Affectations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Affectation_Creneau" Association="FestivArts.Models.Entity.FK_Affectation_Creneau">
+            <End Role="Creneau" EntitySet="Creneaux" />
+            <End Role="Affectation" EntitySet="Affectations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Affectation_Planning" Association="FestivArts.Models.Entity.FK_Affectation_Planning">
+            <End Role="Planning" EntitySet="Plannings" />
+            <End Role="Affectation" EntitySet="Affectations" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="CommentaireDispo">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="JourId" />
+          </Key>
+          <Property Name="BenevoleId" Type="Int32" Nullable="false" />
+          <Property Name="JourId" Type="Int32" Nullable="false" />
+          <Property Name="Commentaire" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Benevole" Relationship="FestivArts.Models.Entity.FK_CommentaireDispo_Benevole" FromRole="CommentaireDispo" ToRole="Benevole" />
+          <NavigationProperty Name="JourEvenement" Relationship="FestivArts.Models.Entity.FK_CommentaireDispo_JourEvenement" FromRole="CommentaireDispo" ToRole="JourEvenement" />
+        </EntityType>
+        <Association Name="FK_CommentaireDispo_Benevole">
+          <End Type="FestivArts.Models.Entity.Benevole" Role="Benevole" Multiplicity="1" />
+          <End Type="FestivArts.Models.Entity.CommentaireDispo" Role="CommentaireDispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentaireDispo">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommentaireDispo_JourEvenement">
+          <End Type="FestivArts.Models.Entity.JourEvenement" Role="JourEvenement" Multiplicity="1" />
+          <End Type="FestivArts.Models.Entity.CommentaireDispo" Role="CommentaireDispo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JourEvenement">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentaireDispo">
+              <PropertyRef Name="JourId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Creneau_Tache1">
+          <End Type="FestivArts.Models.Entity.Tache" Role="Tache" Multiplicity="1" />
+          <End Type="FestivArts.Models.Entity.Creneau" Role="Creneau" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tache">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Creneau">
+              <PropertyRef Name="TacheId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Planning">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nom" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Affectations" Relationship="FestivArts.Models.Entity.FK_Affectation_Planning" FromRole="Planning" ToRole="Affectation" />
+        </EntityType>
+        <EntityType Name="Affectation">
+          <Key>
+            <PropertyRef Name="BenevoleId" />
+            <PropertyRef Name="CreneauId" />
+            <PropertyRef Name="PlanningId" />
+          </Key>
+          <Property Name="BenevoleId" Type="Int32" Nullable="false" />
+          <Property Name="CreneauId" Type="Int32" Nullable="false" />
+          <Property Name="PlanningId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Benevole" Relationship="FestivArts.Models.Entity.FK_Affectation_Benevole" FromRole="Affectation" ToRole="Benevole" />
+          <NavigationProperty Name="Creneau" Relationship="FestivArts.Models.Entity.FK_Affectation_Creneau" FromRole="Affectation" ToRole="Creneau" />
+          <NavigationProperty Name="Planning" Relationship="FestivArts.Models.Entity.FK_Affectation_Planning" FromRole="Affectation" ToRole="Planning" />
+        </EntityType>
+        <Association Name="FK_Affectation_Benevole">
+          <End Type="FestivArts.Models.Entity.Benevole" Role="Benevole" Multiplicity="1" />
+          <End Type="FestivArts.Models.Entity.Affectation" Role="Affectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Benevole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Affectation">
+              <PropertyRef Name="BenevoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Affectation_Creneau">
+          <End Type="FestivArts.Models.Entity.Creneau" Role="Creneau" Multiplicity="1" />
+          <End Type="FestivArts.Models.Entity.Affectation" Role="Affectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creneau">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Affectation">
+              <PropertyRef Name="CreneauId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Affectation_Planning">
+          <End Type="FestivArts.Models.Entity.Planning" Role="Planning" Multiplicity="1" />
+          <End Type="FestivArts.Models.Entity.Affectation" Role="Affectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planning">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Affectation">
+              <PropertyRef Name="PlanningId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="festivartsModelStoreContainer" CdmEntityContainer="FestivArtsContext">
+          <EntitySetMapping Name="Benevoles">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Benevole">
+              <MappingFragment StoreEntitySet="Benevole">
+                <ScalarProperty Name="Permis" ColumnName="Permis" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Prenom" ColumnName="Prenom" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Commentaire" ColumnName="Commentaire" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Confs">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Conf">
+              <MappingFragment StoreEntitySet="Conf">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IsCurrent" ColumnName="IsCurrent" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="DureeCreneauMinute" ColumnName="DureeCreneauMinute" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Creneaux">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Creneau">
+              <MappingFragment StoreEntitySet="Creneau">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CreneauDefId" ColumnName="CreneauDefId" />
+                <ScalarProperty Name="TacheId" ColumnName="TacheId" />
+                <ScalarProperty Name="NbBenevoleMin" ColumnName="NbBenevoleMin" />
+                <ScalarProperty Name="NbBenevoleMax" ColumnName="NbBenevoleMax" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CreneauDefs">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.CreneauDef">
+              <MappingFragment StoreEntitySet="CreneauDef">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="JourId" ColumnName="JourId" />
+                <ScalarProperty Name="NoCreneau" ColumnName="NoCreneau" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dispoes">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Dispo">
+              <MappingFragment StoreEntitySet="Dispo">
+                <ScalarProperty Name="ModifManuel" ColumnName="ModifManuel" />
+                <ScalarProperty Name="BenevoleId" ColumnName="BenevoleId" />
+                <ScalarProperty Name="CreneauDefId" ColumnName="CreneauDefId" />
+                <ScalarProperty Name="EstDispo" ColumnName="EstDispo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JourEvenements">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.JourEvenement">
+              <MappingFragment StoreEntitySet="JourEvenement">
+                <ScalarProperty Name="DateFin" ColumnName="DateFin" />
+                <ScalarProperty Name="DateDebut" ColumnName="DateDebut" />
+                <ScalarProperty Name="Ordre" ColumnName="Ordre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Preferences">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Preference">
+              <MappingFragment StoreEntitySet="Preference">
+                <ScalarProperty Name="BenevoleId" ColumnName="BenevoleId" />
+                <ScalarProperty Name="TypeTacheId" ColumnName="TypeTacheId" />
+                <ScalarProperty Name="Valeur" ColumnName="Preference" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Taches">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Tache">
+              <MappingFragment StoreEntitySet="Tache">
+                <ScalarProperty Name="Ordre" ColumnName="Ordre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TypeTacheId" ColumnName="TypeTacheId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TypeTaches">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.TypeTache">
+              <MappingFragment StoreEntitySet="TypeTache">
+                <ScalarProperty Name="Ordre" ColumnName="Ordre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommentaireDispoes">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.CommentaireDispo">
+              <MappingFragment StoreEntitySet="CommentaireDispo">
+                <ScalarProperty Name="Commentaire" ColumnName="Commentaire" />
+                <ScalarProperty Name="JourId" ColumnName="JourId" />
+                <ScalarProperty Name="BenevoleId" ColumnName="BenevoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Plannings">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Planning">
+              <MappingFragment StoreEntitySet="Planning">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Affectations">
+            <EntityTypeMapping TypeName="FestivArts.Models.Entity.Affectation">
+              <MappingFragment StoreEntitySet="Affectation">
+                <ScalarProperty Name="PlanningId" ColumnName="PlanningId" />
+                <ScalarProperty Name="CreneauId" ColumnName="CreneauId" />
+                <ScalarProperty Name="BenevoleId" ColumnName="BenevoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

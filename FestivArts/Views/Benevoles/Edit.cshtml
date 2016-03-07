@@ -1,0 +1,118 @@
+﻿@model FestivArts.Models.Entity.Benevole
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Benevole</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Nom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Nom)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Prenom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Prenom)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Tel)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tel)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Commentaire)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Commentaire)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Permis)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Permis)
+            </dd>
+
+        </dl>
+
+        <div class="form-group">
+       @foreach (int i in Model.DisposByDays.Keys)
+       {
+        <div class="col-md-3">
+            <p> @ViewBag.Jours[i].Nom </p> 
+            <ul class="list-group">
+                 @foreach (int j in Model.DisposByDays[i].Keys)
+                 {
+                 <li class="list-group-item">
+                     #@j
+                     
+                     @if (@Model.DisposByDays[i][j].EstDispo)
+                     {
+                        <span class="label label-success">
+                            @Model.DisposByDays[i][j].CreneauDef.Debut.ToString("hh:mm")
+                        </span>
+                     }
+                     else
+                     {
+                        <span class="label label-warning">
+                            @Model.DisposByDays[i][j].CreneauDef.Debut.ToString("hh:mm")
+                        </span>
+                     }
+                     @if (@Model.DisposByDays[i][j].ModifManuel)
+                     {
+                        <span class="badge"  > M </span>
+                     }
+                     &nbsp;
+                     @Html.CheckBoxFor( model => model.DisposByDays[i][j].EstDispo )
+                     @Html.LabelFor(model => model.DisposByDays[i][j].EstDispo)
+                </li>
+                 }
+            </ul>
+        </div>
+       }
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
