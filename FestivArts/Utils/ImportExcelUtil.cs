@@ -22,7 +22,7 @@ namespace FestivArts.Utils
                 JourEvenement j = ctx.JourEvenements.Include("CreneauDefs").FirstOrDefault(s => s.Id == jourId);
                 if (j == null)
                 {
-                    throw new ImportException("Cellule A1 n'est pas un jour valide");
+                    throw new ImportException("Cellule A1 n'est pas un jour valide"); 
                 }
                 int line = 2;
                 while (line < sheet.RowCount() && line < 1000) 
