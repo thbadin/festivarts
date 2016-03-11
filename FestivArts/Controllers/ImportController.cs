@@ -56,7 +56,7 @@ namespace FestivArts.Controllers
                     }
                     catch (ImportException ex) 
                     {
-                        ModelState.AddModelError("NewNom", ex);
+                        ModelState.AddModelError("NewNom", ex.Message);
                     }
                 }
             }

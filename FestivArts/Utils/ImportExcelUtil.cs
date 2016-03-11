@@ -61,6 +61,7 @@ namespace FestivArts.Utils
             line++;
             int maxB = t.GetMaxBenevoleByDay(jour.Id);
             Regex regex = new Regex("^([0-9])");
+            List<Affectation> aAjouter = new List<Affectation>();
             for (int l = 0; l < maxB; l++)
             {
 
@@ -68,19 +69,21 @@ namespace FestivArts.Utils
                 int i = ExcelUtils.FIRST_PLAN_COLUMN;
                 foreach (CreneauDef d in jour.CreneauDefs.OrderBy(s => s.NoCreneau))
                 {
-                    string benStr  = r.Cell(i).Value.ToString();
-                    if (!string.IsNullOrWhiteSpace(benStr)) 
+                    var cell = r.Cell(i);
+                    string benStr = cell.Value.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(benStr))
                     {
                         var m = regex.Match(benStr.Trim());
-                        if (m.Success) 
+                        if (m.Success)
                         {
                             int id = int.Parse(m.Groups[0].Captures[0].Value);
                             var b = ctx.Benevoles.FirstOrDefault(s => s.Id == id);
                             if (b == null)
-                                throw new ImportException(string.Format("Case({0},{1}) n° de bénévole introuvable : {2}'", line, i, benStr));
-                            var c = t.Creneaux.FirstOrDefault( s => s.CreneauDefId == d.Id );
+                                throw new ImportException(string.Format("Cell ({0}) Tache {1} : n° de bénévole introuvable : {2}'", cell.Address.ToStringRelative(true), t.Nom, benStr));
+                            var c = t.Creneaux.FirstOrDefault(s => s.CreneauDefId == d.Id);
                             if (c == null)
-                                throw new ImportException(string.Format("Case({0},{1}) creneau introuvable. Creneau def {2}'", line, i,  d.Id ));
+                                throw new ImportException(string.Format("Cell ({0}) Tache {1} : creneau introuvable. Creneau def {2}'", cell.Address.ToStringRelative(true), t.Nom, d.Id));
 
                             Affectation af = new Affectation()
                             {
@@ -88,21 +91,33 @@ namespace FestivArts.Utils
                                 PlanningId = p.Id,
                                 CreneauId = c.Id
                             };
-                            ctx.Affectations.Add(af);
+                            aAjouter.Add(af);
 
 
                         }
-                        else 
+                        else
                         {
-                            throw new ImportException(string.Format("Case({0},{1}) ne correspond pas a un n° de bénévole : {2}'", line, i, benStr));
+                            throw new ImportException(string.Format("Cell ({0}) ne correspond pas a un n° de bénévole : {1}'", cell.Address.ToStringRelative(true),  benStr));
                         }
                     }
-                    
+
                     i++;
                 }
                 line++;
+                if (aAjouter.Count > 0)
+                {
+                    if (p != null)
+                    {
+                        var asuppr = ctx.Affectations.Where(s => s.Creneau.CreneauDef.JourId == jour.Id &&
+                            s.PlanningId == p.Id && s.Creneau.TacheId == t.Id).ToList();
+                        ctx.Affectations.RemoveRange(asuppr);
+                        ctx.SaveChanges();
+                    }
+                    ctx.Affectations.AddRange(aAjouter);
+
+                    ctx.SaveChanges();
+                }
             }
-            ctx.SaveChanges();
         }
     }
 }

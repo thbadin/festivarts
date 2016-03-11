@@ -96,6 +96,11 @@ namespace FestivArts.Models.Entity
     public partial class Benevole 
     {
 
+        public string ExcelKey 
+        {
+            get { return this.Id + " " + this.Prenom + " " + this.Nom; }
+        }
+
         public int DispoCount 
         {
             get { return Dispoes.Count(s => s.EstDispo); }

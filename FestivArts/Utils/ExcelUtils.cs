@@ -15,21 +15,26 @@ namespace FestivArts.Utils
         public const int FIRST_PLAN_COLUMN = 3;
 
 
-        public static void FillNewPlanning(XLWorkbook book,FestivArtsContext ctx,  JourEvenement jour)
+        public static void FillPlanning(XLWorkbook book, FestivArtsContext ctx, JourEvenement jour, Planning p) 
         {
-           
-            foreach (TypeTache t in ctx.TypeTaches.Include("Taches.Creneaux.CreneauDef").Where( s => s.Taches.Max( t => t.Creneaux.Count( u => u.CreneauDef.JourId == jour.Id) ) > 0 )) 
+            foreach (TypeTache t in ctx.TypeTaches.Include("Taches.Creneaux.CreneauDef").Where(s => s.Taches.Max(t => t.Creneaux.Count(u => u.CreneauDef.JourId == jour.Id)) > 0))
             {
-                var worksheet = book.Worksheets.Add(t.Id+"-"+jour.Id+ " " + t.Nom+" ");
+                var worksheet = book.Worksheets.Add(t.Id + "-" + jour.Id + " " + t.Nom + " ");
                 worksheet.Column(1).Hide();
                 worksheet.Column(2).Width = 40;
-                FillNewTypeTache(worksheet, t, jour);
+                FillNewTypeTache(worksheet, t, jour, p);
             }
+        }
+
+        public static void FillNewPlanning(XLWorkbook book,FestivArtsContext ctx,  JourEvenement jour)
+        {
+
+            FillPlanning(book, ctx, jour, null);
             
         }
 
 
-        private static void FillNewTypeTache(IXLWorksheet sheet, TypeTache tache, JourEvenement jour) 
+        private static void FillNewTypeTache(IXLWorksheet sheet, TypeTache tache, JourEvenement jour, Planning p = null) 
         {
             IXLCell c = sheet.Cell("A1");
             c.Value = jour.Id;
@@ -46,14 +51,14 @@ namespace FestivArts.Utils
             int i = 3;
             foreach (Tache t in tache.Taches.Where( s => s.Creneaux.Count( u => u.CreneauDef.JourId == jour.Id) > 0 )) 
             {
-                FillNewTache(sheet, t, jour, ref i);
+                FillNewTache(sheet, t, jour, ref i, p);
                 i += 2;
             }
         }
 
 
 
-        private static void FIllNewRow(IXLRow r, JourEvenement jour, Tache tache, bool isFirst, bool isLast, int tacheLineCount) 
+        private static void FIllNewRow(IXLRow r, JourEvenement jour, Tache tache, Planning p, bool isFirst, bool isLast, int tacheLineCount) 
         {
             Dictionary<int, Creneau> crenauxNeeded = new Dictionary<int, Creneau>();
             tache.Creneaux.Where( s => s.CreneauDef.JourId == jour.Id).ForEach(s => crenauxNeeded.Add(s.CreneauDef.NoCreneau, s));
@@ -61,6 +66,9 @@ namespace FestivArts.Utils
 
             foreach (CreneauDef d in jour.CreneauDefs.OrderBy( s => s.NoCreneau))
             {
+                
+                List<Affectation> affs = p.Affectations.Where(s => s.Creneau.CreneauDefId == d.Id && s.Creneau.TacheId == tache.Id).ToList();
+
 
                 IXLCell c = r.Cell(i);
                 if (i == FIRST_PLAN_COLUMN)
@@ -68,6 +76,10 @@ namespace FestivArts.Utils
                 if (i == FIRST_PLAN_COLUMN + jour.CreneauDefs.Count())
                     c.Style.Border.RightBorder = XLBorderStyleValues.Thick;
 
+                if(affs.Count > tacheLineCount)
+                {
+                    c.Value = affs[tacheLineCount].Benevole.ExcelKey;
+                }
 
                 if (isFirst)
                     c.Style.Border.TopBorder = XLBorderStyleValues.Thick;
@@ -97,7 +109,7 @@ namespace FestivArts.Utils
         }
 
 
-        private static void FillNewTache(IXLWorksheet sheet, Tache tache, JourEvenement jour, ref int line) 
+        private static void FillNewTache(IXLWorksheet sheet, Tache tache, JourEvenement jour, ref int line, Planning p) 
         {
 
             IXLCell c = sheet.Cell("A" + line);
@@ -125,7 +137,7 @@ namespace FestivArts.Utils
             {
 
                 r = sheet.Row(line);
-                FIllNewRow(r, jour, tache, i == 0, i == maxB - 1, i);
+                FIllNewRow(r, jour, tache, p, i == 0, i == maxB - 1, i);
                 line++;
             }
      
