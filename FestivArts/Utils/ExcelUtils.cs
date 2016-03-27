@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using FestivArts.Models.Entity;
+using FestivArts.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -22,7 +23,16 @@ namespace FestivArts.Utils
                 var worksheet = book.Worksheets.Add(t.Id + "-" + jour.Id + " " + t.Nom + " ");
                 worksheet.Column(1).Hide();
                 worksheet.Column(2).Width = 40;
-                FillNewTypeTache(worksheet, t, jour, p);
+                List<Affectation> affectations;
+                if (p == null)
+                    affectations = new List<Affectation>();
+                else
+                {
+                    affectations = ctx.Affectations.ToList();
+                    AffectationUtils.FillAffectationStatus(ctx, affectations);
+                }
+
+                FillNewTypeTache(worksheet, t, jour, affectations, p);
             }
         }
 
@@ -34,7 +44,7 @@ namespace FestivArts.Utils
         }
 
 
-        private static void FillNewTypeTache(IXLWorksheet sheet, TypeTache tache, JourEvenement jour, Planning p = null) 
+        private static void FillNewTypeTache(IXLWorksheet sheet, TypeTache tache, JourEvenement jour,IEnumerable<Affectation> affectations, Planning p = null) 
         {
             IXLCell c = sheet.Cell("A1");
             c.Value = jour.Id;
@@ -51,14 +61,14 @@ namespace FestivArts.Utils
             int i = 3;
             foreach (Tache t in tache.Taches.Where( s => s.Creneaux.Count( u => u.CreneauDef.JourId == jour.Id) > 0 )) 
             {
-                FillNewTache(sheet, t, jour, ref i, p);
+                FillNewTache(sheet, t, jour, ref i, p, affectations);
                 i += 2;
             }
         }
 
 
 
-        private static void FIllNewRow(IXLRow r, JourEvenement jour, Tache tache, Planning p, bool isFirst, bool isLast, int tacheLineCount) 
+        private static void FIllNewRow(IXLRow r, JourEvenement jour, Tache tache, Planning p, bool isFirst, bool isLast, int tacheLineCount, IEnumerable<Affectation> affectations) 
         {
             Dictionary<int, Creneau> crenauxNeeded = new Dictionary<int, Creneau>();
             tache.Creneaux.Where( s => s.CreneauDef.JourId == jour.Id).ForEach(s => crenauxNeeded.Add(s.CreneauDef.NoCreneau, s));
@@ -67,7 +77,7 @@ namespace FestivArts.Utils
             foreach (CreneauDef d in jour.CreneauDefs.OrderBy( s => s.NoCreneau))
             {
                 
-                List<Affectation> affs = p.Affectations.Where(s => s.Creneau.CreneauDefId == d.Id && s.Creneau.TacheId == tache.Id).ToList();
+                List<Affectation> affs = affectations.Where(s => s.Creneau.CreneauDefId == d.Id && s.Creneau.TacheId == tache.Id).ToList();
 
 
                 IXLCell c = r.Cell(i);
@@ -78,7 +88,24 @@ namespace FestivArts.Utils
 
                 if(affs.Count > tacheLineCount)
                 {
-                    c.Value = affs[tacheLineCount].Benevole.ExcelKey;
+                    var a = affs[tacheLineCount];
+                    c.Value = a.Benevole.GetExcelKey(a.Status);
+                    if (a.Status == AffectationStatusEnum.NonDisponible || a.Status == AffectationStatusEnum.Duplique || a.Status == AffectationStatusEnum.Unknown) 
+                    {
+                        c.Style.Font.FontColor = XLColor.Red;
+                        c.Style.Font.Bold = true;
+                    }
+                    else if( a .Status == AffectationStatusEnum.NonSouhaite)
+                    {
+                        c.Style.Font.FontColor = XLColor.DarkOrange;
+                        c.Style.Font.Bold = true;
+                    }
+                    else if (a.Status == AffectationStatusEnum.Souhaite)
+                    {
+                        c.Style.Font.FontColor = XLColor.DarkGreen;
+                        c.Style.Font.Bold = true;
+                    }
+                    
                 }
 
                 if (isFirst)
@@ -109,7 +136,7 @@ namespace FestivArts.Utils
         }
 
 
-        private static void FillNewTache(IXLWorksheet sheet, Tache tache, JourEvenement jour, ref int line, Planning p) 
+        private static void FillNewTache(IXLWorksheet sheet, Tache tache, JourEvenement jour, ref int line, Planning p, IEnumerable<Affectation> affectations) 
         {
 
             IXLCell c = sheet.Cell("A" + line);
@@ -137,7 +164,7 @@ namespace FestivArts.Utils
             {
 
                 r = sheet.Row(line);
-                FIllNewRow(r, jour, tache, p, i == 0, i == maxB - 1, i);
+                FIllNewRow(r, jour, tache, p, i == 0, i == maxB - 1, i, affectations);
                 line++;
             }
      

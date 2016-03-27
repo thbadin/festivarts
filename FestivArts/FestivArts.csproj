@@ -237,12 +237,15 @@
     <Compile Include="Models\Entity\TypeTache.cs">
       <DependentUpon>FestivArtsContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Enums\AffectationStatusEnum.cs" />
     <Compile Include="Models\Enums\PeriodeJourneeEnum.cs" />
     <Compile Include="Models\Enums\TypeTacheEnum.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\AffectationUtils.cs" />
+    <Compile Include="Utils\ExcelByBenevoleExportUtil.cs" />
     <Compile Include="Utils\ExcelUtils.cs" />
     <Compile Include="Utils\ImportExcelUtil.cs" />
     <Compile Include="Utils\ImportException.cs" />

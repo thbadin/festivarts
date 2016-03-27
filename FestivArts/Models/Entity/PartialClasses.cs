@@ -8,6 +8,28 @@ using System.Web;
 namespace FestivArts.Models.Entity
 {
 
+    public partial class Creneau 
+    {
+        public override string ToString()
+        {
+            return this.CreneauDef.ToString() + " " + this.Tache.Nom;
+        }
+    }
+
+    public partial class Affectation 
+    {
+        public AffectationStatusEnum Status
+        {
+            get;
+            set;
+        }
+
+        public override string ToString()
+        {
+            return this.Creneau.ToString() + " : " + this.Benevole.ToString();
+        }
+    }
+
     public class JourEvenementMetadata 
     { 
         [DataType(DataType.DateTime)]
@@ -23,7 +45,11 @@ namespace FestivArts.Models.Entity
     [MetadataType(typeof(JourEvenementMetadata))]
     public  partial class JourEvenement
     {
-        
+
+        public override string ToString()
+        {
+            return this.Nom;
+        }
     }
 
 
@@ -89,16 +115,44 @@ namespace FestivArts.Models.Entity
 
         public override string ToString()
         {
-            return this.JourId + "-" + this.NoCreneau;
+            return this.JourEvenement.ToString() + " #" + this.NoCreneau;
         }
     }
 
     public partial class Benevole 
     {
 
-        public string ExcelKey 
+        public override string ToString()
         {
-            get { return this.Id + " " + this.Prenom + " " + this.Nom; }
+            return this.Prenom + " " + this.Nom;
+        }
+
+        public string GetExcelKey(AffectationStatusEnum status)
+        {
+            var str = this.Id + " ";
+            switch (status)
+            {
+                case AffectationStatusEnum.Duplique:
+                    str += "(D) ";
+                    break;
+                case AffectationStatusEnum.NonDisponible:
+                    str += "(ND) ";
+                    break;
+                case AffectationStatusEnum.NonSouhaite:
+                    str += "(NS) ";
+                    break;
+                case AffectationStatusEnum.Unknown:
+                    str += "(UKN) ";
+                    break;
+                case AffectationStatusEnum.Souhaite:
+                    str += "(S) ";
+                    break;
+                case AffectationStatusEnum.Correct:
+                    str += "(C) ";
+                    break;
+            }
+                str += this.Prenom + " " + this.Nom;
+                return str;
         }
 
         public int DispoCount 

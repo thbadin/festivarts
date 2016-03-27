@@ -5,12 +5,12 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="8b403a98464a43da958b5dab521ee702" Name="Diagram1" ZoomLevel="64">
-        <EntityTypeShape EntityType="FestivArts.Models.Entity.Benevole" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Benevole" Width="1.5" PointX="11.5" PointY="6.625" IsExpanded="true" />
         <EntityTypeShape EntityType="FestivArts.Models.Entity.Conf" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FestivArts.Models.Entity.Creneau" Width="1.5" PointX="6.125" PointY="4.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="FestivArts.Models.Entity.CreneauDef" Width="1.5" PointX="3" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.CreneauDef" Width="1.5" PointX="6" PointY="7.625" IsExpanded="true" />
         <EntityTypeShape EntityType="FestivArts.Models.Entity.Dispo" Width="1.5" PointX="8.375" PointY="5.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="FestivArts.Models.Entity.JourEvenement" Width="1.5" PointX="0.75" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.JourEvenement" Width="1.5" PointX="5" PointY="10.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FestivArts.Models.Entity.Preference" Width="1.5" PointX="3.25" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="FestivArts.Models.Entity.Tache" Width="1.5" PointX="2.625" PointY="4.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FestivArts.Models.Entity.TypeTache" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="true" />
@@ -21,7 +21,7 @@
         <AssociationConnector Association="FestivArts.Models.Entity.FK_Dispo_CreneauDef" ManuallyRouted="false" />
         <AssociationConnector Association="FestivArts.Models.Entity.FK_Preference_TypeTache" ManuallyRouted="false" />
         <AssociationConnector Association="FestivArts.Models.Entity.FK_Tache_TypeTache" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="FestivArts.Models.Entity.CommentaireDispo" Width="2.625" PointX="6" PointY="8.625" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.CommentaireDispo" Width="2.625" PointX="9.125" PointY="10.125" />
         <AssociationConnector Association="FestivArts.Models.Entity.FK_CommentaireDispo_Benevole" />
         <AssociationConnector Association="FestivArts.Models.Entity.FK_CommentaireDispo_JourEvenement" />
         <AssociationConnector Association="FestivArts.Models.Entity.FK_Creneau_Tache1" />

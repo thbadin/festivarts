@@ -29,6 +29,21 @@ namespace FestivArts.Controllers
 
         }
 
+        public ActionResult ByBenevole()
+        {
+            var workbook = new XLWorkbook();
+            using (var ctx = new FestivArtsContext())
+            {
+                Planning p = ctx.Plannings.Include("Affectations.Benevole").OrderByDescending(s => s.Date).FirstOrDefault();
+                ExcelByBenevoleExportUtil.FillPlanning(workbook, ctx, p);
+            }
+            var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "planings.xlsx");
+
+        }
+
         public ActionResult Last(int id)
         {
             var workbook = new XLWorkbook();
