@@ -135,6 +135,7 @@ namespace FestivArts.Utils
                     {
                         c.Style.Fill.BackgroundColor = XLColor.Black;
                     }
+                    else { c.Value = "1"; }
                 }
                 i++;
             }

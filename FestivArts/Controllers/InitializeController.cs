@@ -67,7 +67,9 @@ namespace FestivArts.Controllers
         public ActionResult ImportBenevolePost()
         {
             var list = new List<GoogleDriveResult>();
-            using(var workbook = new XLWorkbook(Request.Files[0].InputStream) )
+            var ist = Request.Files[0].InputStream;
+            ist.Position = 0;
+            using(var workbook = new XLWorkbook(ist) )
             {
                 using (var ws = workbook.Worksheet(1)) 
                 {
@@ -186,7 +188,12 @@ namespace FestivArts.Controllers
                         
                     }
                 }
+
+                db.SaveChanges();
             }
+
+            db.SaveChanges();
+
 
             //Gestion des commentaire dispo
             foreach (var g in list)
@@ -230,12 +237,12 @@ namespace FestivArts.Controllers
         private bool isDispo(string txt, CreneauDef c) 
         {
             txt = txt.ToLower();
-            if (c.Debut.Hour >= 7 && c.Fin.Hour <= 13) 
+            if (c.Debut.Hour >= 7 && c.Fin.Hour <= 13 && c.Fin.Hour >= 7) 
             {
                 if (txt.Contains("matin"))
                     return true;
             }
-            if (c.Debut.Hour >= 12 && c.Fin.Hour <= 19)
+            if (c.Debut.Hour >= 12 && c.Fin.Hour <= 19 && c.Fin.Hour >= 12)
             {
                 if (txt.Contains("après"))
                     return true;

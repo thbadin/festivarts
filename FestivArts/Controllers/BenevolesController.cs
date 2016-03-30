@@ -47,12 +47,21 @@ namespace FestivArts.Controllers
                 return HttpNotFound();
             }
             benevole.FillDispoByDayFromDb();
-            var dico = new Dictionary<int,JourEvenement>();
-            foreach(var j in db.JourEvenements)
+            var dico = new Dictionary<int, JourEvenement>();
+            var coms = new Dictionary<int, string>();
+            foreach (var j in db.JourEvenements)
             {
-                dico.Add(j.Id,j);
+                var strDispo = benevole.CommentaireDispoes.FirstOrDefault(s => s.JourId == j.Id);
+                dico.Add(j.Id, j);
+                coms.Add(j.Id, strDispo == null ? "" : strDispo.Commentaire);
             }
             ViewBag.Jours = dico;
+            ViewBag.Coms = coms;
+
+            var nextBenevole = db.Benevoles.OrderBy(s => s.Id).FirstOrDefault(s => s.Id > benevole.Id);
+            if (nextBenevole == null)
+                nextBenevole = db.Benevoles.OrderBy(s => s.Id).First();
+            ViewBag.NextBenId = nextBenevole.Id;
             return View(benevole);
         }
 
@@ -94,11 +103,19 @@ namespace FestivArts.Controllers
             }
             benevole.FillDispoByDayFromDb();
             var dico = new Dictionary<int, JourEvenement>();
+            var coms = new Dictionary<int, string>();
             foreach (var j in db.JourEvenements)
             {
-                dico.Add(j.Id, j);
+                var strDispo = benevole.CommentaireDispoes.FirstOrDefault( s => s.JourId == j.Id);
+                dico.Add(j.Id,j);
+                coms.Add(j.Id, strDispo == null ? "" : strDispo.Commentaire );
             }
             ViewBag.Jours = dico;
+            ViewBag.Coms = coms;
+            var nextBenevole = db.Benevoles.OrderBy(s => s.Id).First(s => s.Id > benevole.Id);
+            if (nextBenevole == null)
+                nextBenevole = db.Benevoles.OrderBy(s => s.Id).First();
+            ViewBag.NextBenId = nextBenevole.Id;
             return View(benevole);
         }
 

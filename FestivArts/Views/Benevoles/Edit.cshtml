@@ -71,7 +71,16 @@
        @foreach (int i in Model.DisposByDays.Keys)
        {
         <div class="col-md-3">
-            <p> @ViewBag.Jours[i].Nom </p> 
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@ViewBag.Jours[i].Nom</h3>
+                </div>
+                <div class="panel-body">
+                    @ViewBag.Coms[i]
+                </div>
+            </div>
+
             <ul class="list-group">
                  @foreach (int j in Model.DisposByDays[i].Keys)
                  {
@@ -81,13 +90,13 @@
                      @if (@Model.DisposByDays[i][j].EstDispo)
                      {
                         <span class="label label-success">
-                            @Model.DisposByDays[i][j].CreneauDef.Debut.ToString("hh:mm")
+                            @Model.DisposByDays[i][j].CreneauDef.Debut.ToString("HH:mm")
                         </span>
                      }
                      else
                      {
                         <span class="label label-warning">
-                            @Model.DisposByDays[i][j].CreneauDef.Debut.ToString("hh:mm")
+                            @Model.DisposByDays[i][j].CreneauDef.Debut.ToString("HH:mm")
                         </span>
                      }
                      @if (@Model.DisposByDays[i][j].ModifManuel)
@@ -95,7 +104,7 @@
                         <span class="badge"  > M </span>
                      }
                      &nbsp;
-                     @Html.CheckBoxFor( model => model.DisposByDays[i][j].EstDispo )
+                     @Html.CheckBoxFor(model => model.DisposByDays[i][j].EstDispo)
                      @Html.LabelFor(model => model.DisposByDays[i][j].EstDispo)
                 </li>
                  }
@@ -114,5 +123,8 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index") |
+    @Html.ActionLink("Next", "Edit", new {id = @ViewBag.NextBenId})
+
+
 </div>
