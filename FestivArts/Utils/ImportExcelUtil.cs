@@ -60,7 +60,7 @@ namespace FestivArts.Utils
             IXLRow timeRow = sheet.Row(line);
             line++;
             int maxB = t.GetMaxBenevoleByDay(jour.Id);
-            Regex regex = new Regex("^([0-9])");
+            Regex regex = new Regex("^([0-9]+)");
             List<Affectation> aAjouter = new List<Affectation>();
             for (int l = 0; l < maxB; l++)
             {
@@ -75,7 +75,7 @@ namespace FestivArts.Utils
                     if (!string.IsNullOrWhiteSpace(benStr))
                     {
                         var m = regex.Match(benStr.Trim());
-                        if (m.Success)
+                        if (m.Success )
                         {
                             int id = int.Parse(m.Groups[0].Captures[0].Value);
                             var b = ctx.Benevoles.FirstOrDefault(s => s.Id == id);
@@ -85,14 +85,16 @@ namespace FestivArts.Utils
                             if (c == null)
                                 throw new ImportException(string.Format("Cell ({0}) Tache {1} : creneau introuvable. Creneau def {2}'", cell.Address.ToStringRelative(true), t.Nom, d.Id));
 
-                            Affectation af = new Affectation()
+                            if (aAjouter.Count(s => s.BenevoleId == b.Id && s.CreneauId == c.Id) == 0)
                             {
-                                BenevoleId = b.Id,
-                                PlanningId = p.Id,
-                                CreneauId = c.Id
-                            };
-                            aAjouter.Add(af);
-
+                                Affectation af = new Affectation()
+                                {
+                                    BenevoleId = b.Id,
+                                    PlanningId = p.Id,
+                                    CreneauId = c.Id
+                                };
+                                aAjouter.Add(af);
+                            }
 
                         }
                         else

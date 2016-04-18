@@ -16,8 +16,8 @@ namespace FestivArts.Controllers
 
         // GET: Taches
         public ActionResult Index()
-        {
-            var taches = db.Taches.OrderBy(s => s.Ordre).Include(t => t.Creneaux);
+        { 
+            var taches = db.Taches.Include("Creneaux.CreneauDef.JourEvenement").OrderBy(s => s.Ordre);
             return View(taches.ToList());
         }
 

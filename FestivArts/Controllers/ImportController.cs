@@ -21,7 +21,7 @@ namespace FestivArts.Controllers
 
             if (db.Plannings.Count() > 0)
             {
-                ViewBag.Plannings = new SelectList(db.Plannings.OrderBy(s => s.Date), "Id", "Nom", 0);
+                ViewBag.Plannings = new SelectList(db.Plannings.OrderByDescending(s => s.Date), "Id", "Nom", 0);
             }
             return View();
         }
@@ -50,9 +50,10 @@ namespace FestivArts.Controllers
                         p = db.Plannings.First(s => s.Id == vm.PlanningId);
                     }
 
-                    try 
+                    try   
                     {
                         ImportExcelUtil.ImportPlanning(p, db, workbook);
+                        vm.LastPlanningId = p.Id;
                     }
                     catch (ImportException ex) 
                     {
@@ -60,6 +61,7 @@ namespace FestivArts.Controllers
                     }
                 }
             }
+            vm.Jours = db.JourEvenements.ToList();
             return View(vm);
         }
         protected override void Dispose(bool disposing)

@@ -1,0 +1,169 @@
+﻿@model FestivArts.ViewModels.RechercheBenevoleViewModels
+
+@{
+    ViewBag.Title = "Find";
+}
+
+<h2>Find</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>RechercheBenevoleViewModels</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.SelectedJour, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SelectedJour, Model.Jours, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SelectedJour, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Search" class="btn btn-default" />
+            </div>
+        </div>
+
+        <table class="table" id="listBenevole">
+            <thead>
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Nom
+                    </th>
+                    <th>
+                        Dispo
+                    </th><th>
+    La veille
+</th>
+                    <th>
+                        Affectation
+                    </th>
+
+                    <th></th>
+                </tr>
+                </thead>
+            <tbody>
+                @foreach (var item in Model.Benevoles)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+
+                        <td>
+
+
+                            @Html.ActionLink(item.Prenom + " " + item.Nom, "Edit", new { id = item.Id }) 
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DispoJourStr)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastVeilleCreneaux)
+                        </td>
+                        
+                        <td>
+                            @item.Affectations.Count(s => s.Creneau.CreneauDef.JourId == Model.SelectedJour)
+                        </td>
+                        <td>
+                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    C
+                                </span>
+                            }
+                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    C
+                                </span>
+                            }
+                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    B
+                                </span>
+                            }
+                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    B
+                                </span>
+                            }
+                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    E
+                                </span>
+                            }
+                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    E
+                                </span>
+                            }
+                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    L
+                                </span>
+                            }
+                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    L
+                                </span>
+                            }@if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    P
+                                </span>
+                            }
+                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    P
+                                </span>
+                            }@if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    S
+                                </span>
+                            }
+                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    S
+                                </span>
+                            }
+                        </td>
+
+
+                    </tr>
+                }
+            </tbody>
+</table>
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jquery.dataTables")
+
+<script type="text/javascript">
+    $('#listBenevole').dataTable();
+</script>
+}
+
+

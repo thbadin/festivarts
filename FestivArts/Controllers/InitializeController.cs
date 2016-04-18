@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
@@ -69,7 +70,7 @@ namespace FestivArts.Controllers
             var list = new List<GoogleDriveResult>();
             var ist = Request.Files[0].InputStream;
             ist.Position = 0;
-            using(var workbook = new XLWorkbook(ist) )
+            using(var workbook = new XLWorkbook(@"C:\Users\Titho\Downloads\import.xlsx") )
             {
                 using (var ws = workbook.Worksheet(1)) 
                 {
@@ -143,6 +144,7 @@ namespace FestivArts.Controllers
                         p.BenevoleId = b.Id;
                     }
                     p.Valeur = kv.Value;
+                    db.SaveChanges();
                 }
             }
             db.SaveChanges();
@@ -205,7 +207,7 @@ namespace FestivArts.Controllers
                     if (c == null)
                     {
                         c = new CommentaireDispo();
-                        db.CommentaireDispoes.Add(c);
+                        b.CommentaireDispoes.Add(c);
                         c.JourId = j.Id;
                         c.BenevoleId = b.Id;
                     }

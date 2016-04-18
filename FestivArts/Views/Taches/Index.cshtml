@@ -17,8 +17,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
+        <th>Creneaux</th>
         <th></th>
-    </tr>
+    </tr>    
 
 @foreach (var item in Model) {
     <tr>
@@ -27,6 +28,16 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @foreach (var c in item.BesoinByDay)
+            {
+                <span>
+                    <span class="label label-success">
+                        @c.Key : @c.Value 
+                    </span> &nbsp;
+                </span>
+            }
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

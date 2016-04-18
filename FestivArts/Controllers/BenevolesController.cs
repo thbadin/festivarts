@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using FestivArts.Models.Entity;
 using System.Text.RegularExpressions;
+using FestivArts.ViewModels;
 
 namespace FestivArts.Controllers
 {
@@ -20,6 +21,19 @@ namespace FestivArts.Controllers
         {
             return View(db.Benevoles.Include("Dispoes").ToList());
         }
+
+
+        public ActionResult Find( )
+        {
+            return View(new RechercheBenevoleViewModels(db));
+        }
+
+        [HttpPost]
+        public ActionResult Find(RechercheBenevoleViewModels vm)
+        {
+            return View( new RechercheBenevoleViewModels(db, vm.SelectedJour) );
+        }
+
 
         // GET: Benevoles/Details/5
         public ActionResult Details(int? id)

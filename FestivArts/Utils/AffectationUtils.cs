@@ -15,7 +15,7 @@ namespace FestivArts.Utils
                 a.Status = AffectationStatusEnum.Unknown;
 
             Dictionary<int,HashSet<int>> dispoes = new Dictionary<int,HashSet<int>>();
-            foreach(var d in ctx.Dispoes)
+            foreach(var d in ctx.Dispoes.Where( s => s.EstDispo))
             {
                 if(! dispoes.ContainsKey( d.BenevoleId))
                     dispoes[d.BenevoleId] = new HashSet<int>();
@@ -44,7 +44,7 @@ namespace FestivArts.Utils
                 else 
                 {
                     var s = dispoes[a.BenevoleId];
-                    if (!s.Contains(a.Creneau.CreneauDefId)) 
+                    if (!s.Contains(a.Creneau.CreneauDefId) ) 
                     {
                         a.Status = AffectationStatusEnum.NonDisponible;
                     }

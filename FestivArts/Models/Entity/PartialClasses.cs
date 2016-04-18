@@ -1,4 +1,5 @@
-﻿using FestivArts.Models.Enums;
+﻿using ClosedXML.Excel;
+using FestivArts.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -66,6 +67,33 @@ namespace FestivArts.Models.Entity
         {
            return this.Creneaux.Max(s => s.Affectations.Count( t => t.PlanningId == planningId)); 
         }
+
+        private Dictionary<string, int> besoinByDay;
+        public Dictionary<string, int> BesoinByDay{
+            get
+            {
+                if (besoinByDay != null)
+                    return besoinByDay;
+
+                besoinByDay = new Dictionary<string, int>();
+                foreach (var c in this.Creneaux)
+                {
+                    if (c.NbBenevoleMax > 0)
+                    {
+                        if ( ! besoinByDay.ContainsKey(c.CreneauDef.JourEvenement.Nom))
+                        {
+                            besoinByDay.Add(c.CreneauDef.JourEvenement.Nom, 1);
+                        }
+                        else
+                        {
+                            besoinByDay[c.CreneauDef.JourEvenement.Nom]++;
+                        }
+                    }
+                }
+                return besoinByDay;
+            }
+
+        }
     }
 
     public partial class TypeTache
@@ -122,9 +150,80 @@ namespace FestivArts.Models.Entity
     public partial class Benevole 
     {
 
+        public string DispoJourStr
+        {
+            get;
+            private set;
+        }
+
+        public string LastVeilleCreneaux
+        {
+            get;
+            private set;
+        }
+
+        public void FillDispoJour(int jourId)
+        {
+            List<string> disp = new List<string>();
+            string prevCren = "";
+            int prevNo = -1;
+            foreach (var d in this.Dispoes.Where(s => s.CreneauDef.JourId == jourId).OrderBy(s => s.CreneauDef.NoCreneau))
+            {
+                if (d.EstDispo && prevNo < 0)
+                {
+                    prevNo = d.CreneauDef.NoCreneau;
+                    prevCren = d.CreneauDef.Debut.ToString("HH:mm") + "-";
+                } 
+                else if (! d.EstDispo && prevNo >= 0)
+                {
+                    prevNo = -1;
+                    prevCren += d.CreneauDef.Fin.ToString("HH:mm");
+                    disp.Add(prevCren);
+                    prevCren = "";
+                }
+            }
+
+            if (prevNo >= 0)
+            {
+                prevCren += this.Dispoes.Where(s => s.CreneauDef.JourId == jourId).OrderByDescending( s => s.CreneauDef.NoCreneau).First().CreneauDef.Fin.ToString("HH:mm");
+                disp.Add(prevCren);
+            }
+            DispoJourStr = string.Join(" ", disp);
+
+            LastVeilleCreneaux = "";
+            using (var ctx = new FestivArtsContext())
+            {
+                var jourJ = ctx.JourEvenements.First(t => t.Id == jourId);
+                JourEvenement prevJ = ctx.JourEvenements.Where(s => s.Ordre < jourJ.Ordre).OrderByDescending(s => s.Ordre).FirstOrDefault();
+            
+                if(prevJ != null)
+                {
+
+                    var pc = this.Affectations.Where(s => s.Creneau.CreneauDef.JourId == prevJ.Id);
+                    if (pc.Count() > 0)
+                    {
+                        int maxCren = pc.Max(s => s.Creneau.CreneauDef.NoCreneau);
+                        if( maxCren > 0)
+                        {
+                            CreneauDef d = ctx.CreneauDefs.First(s => s.NoCreneau == maxCren && s.JourId == prevJ.Id);
+                            LastVeilleCreneaux = d.Fin.ToString("HH:mm");
+                        }
+                    }
+                }
+            }
+            
+
+
+        }
+
+        public  string PrenomN
+        {
+            get { return this.Id +" - " +this.Prenom + " " + this.Nom.Substring(0, 1); }
+        }
+
         public override string ToString()
         {
-            return this.Prenom + " " + this.Nom;
+            return PrenomN;
         }
 
         public string GetExcelKey(AffectationStatusEnum status)
@@ -144,16 +243,35 @@ namespace FestivArts.Models.Entity
                 case AffectationStatusEnum.Unknown:
                     str += "(UKN) ";
                     break;
-                case AffectationStatusEnum.Souhaite:
-                    str += "(S) ";
-                    break;
-                case AffectationStatusEnum.Correct:
-                    str += "(C) ";
-                    break;
             }
-                str += this.Prenom + " " + this.Nom;
+                str += this.Prenom+" " +this.Nom.Substring(0,1);
                 return str;
         }
+
+
+        public XLColor GetBenevoleColor()
+        {
+            int val = this.PrenomN.GetHashCode();
+
+            switch (val % 6)
+            {
+                case 0:
+                    return XLColor.DarkBlue;
+                case 1:
+                    return XLColor.DarkBrown;
+                case 2:
+                    return XLColor.DarkOrange;
+                case 3:
+                    return XLColor.DarkRed;
+                case 4:
+                    return XLColor.DarkGreen;
+                case 5:
+                    return XLColor.DarkMagenta;
+               
+            } 
+            return XLColor.Black;
+        }
+
 
         public int DispoCount 
         {
@@ -169,6 +287,8 @@ namespace FestivArts.Models.Entity
             get;
             set;
         }
+
+
 
         public void FillDispoByDayFromDb() 
         {

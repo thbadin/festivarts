@@ -16,8 +16,11 @@ namespace FestivArts.ViewModels
         public int Id { get; set; }
 
         public int PlanningId { get; set; }
-        
 
+
+        public List<JourEvenement> Jours { get; set; }
+
+        public int LastPlanningId { get; set; }
 
         [DisplayName("Nouveau planning")]
         public string NewNom { get; set; }

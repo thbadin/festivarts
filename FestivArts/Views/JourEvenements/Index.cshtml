@@ -51,7 +51,8 @@
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id }) | 
             @Html.ActionLink("NP", "New", "Excel", new { id = item.Id }, null)|
-            @Html.ActionLink("LP", "Last", "Excel", new { id = item.Id }, null)
+            @Html.ActionLink("LP", "Last", "Excel", new { id = item.Id }, null) |            
+            @Html.ActionLink("RP", "LastReadable", "Excel", new { id = item.Id }, null) 
             
         </td>
     </tr>

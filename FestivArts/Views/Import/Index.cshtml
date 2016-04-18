@@ -35,4 +35,28 @@
             <input type="submit" value="Create" class="btn btn-default" />
         </div>
     </div>
+    
+    
+    if (Model != null && Model.Jours != null && Model.Jours.Count > 0)
+    {
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                 @foreach (var item in Model.Jours)
+                 {
+                    <span>
+                        @Html.ActionLink(item.Nom, "GetPlanning", "Excel", new { id = item.Id, planningId = Model.LastPlanningId }, null) |
+                    </span>
+                 }
+                <span>                    
+                    @Html.ActionLink("Planning", "ByBenevole", "Excel")
+                </span>
+
+            </div>
+        </div>
+    }
+
+
+
+
+
 }
