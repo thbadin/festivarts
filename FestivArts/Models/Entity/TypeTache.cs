@@ -25,6 +25,7 @@ namespace FestivArts.Models.Entity
         public string Nom { get; set; }
         public string Description { get; set; }
         public int Ordre { get; set; }
+        public string RespoContact { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Preference> Preferences { get; set; }

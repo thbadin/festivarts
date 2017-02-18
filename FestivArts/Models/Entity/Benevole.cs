@@ -17,10 +17,10 @@ namespace FestivArts.Models.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Benevole()
         {
+            this.Affectations = new HashSet<Affectation>();
+            this.CommentaireDispoes = new HashSet<CommentaireDispo>();
             this.Dispoes = new HashSet<Dispo>();
             this.Preferences = new HashSet<Preference>();
-            this.CommentaireDispoes = new HashSet<CommentaireDispo>();
-            this.Affectations = new HashSet<Affectation>();
         }
     
         public int Id { get; set; }
@@ -32,12 +32,12 @@ namespace FestivArts.Models.Entity
         public bool Permis { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Dispo> Dispoes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Preference> Preferences { get; set; }
+        public virtual ICollection<Affectation> Affectations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommentaireDispo> CommentaireDispoes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Affectation> Affectations { get; set; }
+        public virtual ICollection<Dispo> Dispoes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Preference> Preferences { get; set; }
     }
 }

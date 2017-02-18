@@ -22,6 +22,43 @@ namespace FestivArts.Controllers
             return View(db.Benevoles.Include("Dispoes").ToList());
         }
 
+        public ActionResult Create()
+        {
+            var vm = new BenevoleCreateViewModel();
+            vm.Jours = db.JourEvenements.Select(j => new BenevoleJourCreateNewModel() { Id = j.Id, Nom = j.Nom }).ToList();
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Create(BenevoleCreateViewModel vm)
+        {
+
+            Benevole b = new Benevole()
+            {
+                Nom = vm.Nom,
+                Prenom = vm.Prenom,
+                Permis = vm.Permis,
+                Commentaire = vm.Commentaire,
+                Email = vm.Email,
+                Tel = vm.Tel
+            };
+            db.Benevoles.Add(b);
+
+            foreach(CreneauDef c in db.CreneauDefs)
+            {
+                Dispo d = new Dispo()
+                {
+                    CreneauDef = c,
+                    EstDispo = vm.Jours.Any(j => j.IsSelected && c.JourEvenement.Id == j.Id),
+                    ModifManuel = false
+                };
+                b.Dispoes.Add(d);
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+
+        }
+
 
         public ActionResult Find( )
         {

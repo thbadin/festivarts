@@ -17,20 +17,20 @@ namespace FestivArts.Models.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public JourEvenement()
         {
-            this.CreneauDefs = new HashSet<CreneauDef>();
             this.CommentaireDispoes = new HashSet<CommentaireDispo>();
+            this.CreneauDefs = new HashSet<CreneauDef>();
         }
     
         public int Id { get; set; }
         public string Nom { get; set; }
         public string Description { get; set; }
-        public int Ordre { get; set; }
         public System.DateTime DateDebut { get; set; }
         public System.DateTime DateFin { get; set; }
+        public int Ordre { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CreneauDef> CreneauDefs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommentaireDispo> CommentaireDispoes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CreneauDef> CreneauDefs { get; set; }
     }
 }

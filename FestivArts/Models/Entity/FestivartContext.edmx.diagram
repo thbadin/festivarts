@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3afc42f5e5b44e779a15a415e4dcd73f" Name="Diagram1">
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Affectation" Width="1.5" PointX="4.875" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Benevole" Width="1.5" PointX="7" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.CommentaireDispo" Width="1.5" PointX="4.875" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Conf" Width="1.5" PointX="7.625" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Creneau" Width="1.5" PointX="2.625" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.CreneauDef" Width="1.5" PointX="1.875" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Dispo" Width="1.5" PointX="6.625" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.JourEvenement" Width="1.5" PointX="2.375" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Planning" Width="1.5" PointX="4.5" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Preference" Width="1.5" PointX="9.625" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.Tache" Width="1.5" PointX="5.25" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="FestivArts.Models.Entity.TypeTache" Width="1.5" PointX="7.75" PointY="12.625" IsExpanded="true" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Affectation_Benevole" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Affectation_Creneau" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Affectation_Planning" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_CommentaireDispo_Benevole" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Dispo_Benevole" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Preference_Benevole" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_CommentaireDispo_JourEvenement" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Creneau_CreneauDef" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Creneau_Tache" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_CreneauDef_JourEvenement" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Dispo_CreneauDef" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Preference_TypeTache" ManuallyRouted="false" />
+        <AssociationConnector Association="FestivArts.Models.Entity.FK_Tache_TypeTache" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

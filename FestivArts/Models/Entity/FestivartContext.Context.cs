@@ -25,17 +25,17 @@ namespace FestivArts.Models.Entity
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Affectation> Affectations { get; set; }
         public virtual DbSet<Benevole> Benevoles { get; set; }
+        public virtual DbSet<CommentaireDispo> CommentaireDispoes { get; set; }
         public virtual DbSet<Conf> Confs { get; set; }
         public virtual DbSet<Creneau> Creneaux { get; set; }
         public virtual DbSet<CreneauDef> CreneauDefs { get; set; }
         public virtual DbSet<Dispo> Dispoes { get; set; }
         public virtual DbSet<JourEvenement> JourEvenements { get; set; }
+        public virtual DbSet<Planning> Plannings { get; set; }
         public virtual DbSet<Preference> Preferences { get; set; }
         public virtual DbSet<Tache> Taches { get; set; }
         public virtual DbSet<TypeTache> TypeTaches { get; set; }
-        public virtual DbSet<CommentaireDispo> CommentaireDispoes { get; set; }
-        public virtual DbSet<Planning> Plannings { get; set; }
-        public virtual DbSet<Affectation> Affectations { get; set; }
     }
 }

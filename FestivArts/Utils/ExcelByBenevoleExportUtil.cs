@@ -10,19 +10,19 @@ namespace FestivArts.Utils
 {
     public static class ExcelByBenevoleExportUtil
     {
-        public static void FillPlanning(XLWorkbook book, FestivArtsContext ctx, Planning p)
+        public static void FillPlanning(XLWorkbook book, FestivArtsContext ctx, Planning p, bool readable)
         {
             foreach (var j in ctx.JourEvenements.Include("CreneauDefs.Creneaux.Affectations.Benevole"))
             {
                 var worksheet = book.Worksheets.Add(j.Nom);
-                FillJour(worksheet, ctx, p, j);
+                FillJour(worksheet, ctx, p, j, readable);
                 worksheet.Columns().Width = 5;
                 worksheet.Column(1).Width = 25;
                 worksheet.SheetView.Freeze(2, 1);
             }
         }
 
-        private static void FillJour(IXLWorksheet sheet, FestivArtsContext ctx, Planning p, JourEvenement j)
+        private static void FillJour(IXLWorksheet sheet, FestivArtsContext ctx, Planning p, JourEvenement j, bool readable)
         {
             IXLCell c = sheet.Cell("A1");
             c.Value = "Planning de " + j.Nom;
@@ -48,8 +48,38 @@ namespace FestivArts.Utils
                 var disp = b.Dispoes.Where(s => s.CreneauDef.JourId == j.Id && s.EstDispo);
                 FillBenevole(sheet, ctx, ref i, b, aff, disp, creneauxDef);
                 i ++;
-            } 
+            }
+            if (!readable)
+            {
+                i += 1;
+                FillCalculManqueDispo(sheet.Row(i), ctx, j);
+            }
         }
+        private static void FillCalculManqueDispo(IXLRow row, FestivArtsContext ctx, JourEvenement j)
+        {
+            int i = 2;
+            foreach(CreneauDef cd in ctx.CreneauDefs.Include("Dispoes").Include("Creneaux").Where( c => c.JourId == j.Id).ToList())
+            {
+                int minBen = cd.Creneaux.Sum(cr => cr.NbBenevoleMin);
+                int maxBen = cd.Creneaux.Sum(cr => cr.NbBenevoleMax);
+                int dispo = cd.Dispoes.Where(d => d.EstDispo).Count();
+                IXLCell c = row.Cell(i++);
+                c.Value = dispo - minBen;
+                c.Style.Font.Bold = true;
+                if (dispo  < minBen)
+                {
+                    c.Style.Font.FontColor = XLColor.Red;
+                }else if (dispo   > maxBen)
+                {
+                    c.Style.Font.FontColor = XLColor.DarkGreen;
+                }
+                else
+                {
+                    c.Style.Font.FontColor = XLColor.DarkOrange;
+                }
+            }
+        }
+
         private static void FillBenevole(IXLWorksheet sheet, FestivArtsContext ctx, ref int row, Benevole b, IEnumerable<Affectation> affectations, IEnumerable<Dispo> dispos, IEnumerable<CreneauDef> creneaux)
         {
             var aff = new Dictionary<int, List<Affectation>>();

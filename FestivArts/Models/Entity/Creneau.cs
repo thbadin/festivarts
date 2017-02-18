@@ -26,9 +26,9 @@ namespace FestivArts.Models.Entity
         public int NbBenevoleMin { get; set; }
         public int NbBenevoleMax { get; set; }
     
-        public virtual CreneauDef CreneauDef { get; set; }
-        public virtual Tache Tache { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Affectation> Affectations { get; set; }
+        public virtual CreneauDef CreneauDef { get; set; }
+        public virtual Tache Tache { get; set; }
     }
 }

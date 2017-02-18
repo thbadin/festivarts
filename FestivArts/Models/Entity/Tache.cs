@@ -25,9 +25,10 @@ namespace FestivArts.Models.Entity
         public string Description { get; set; }
         public int TypeTacheId { get; set; }
         public int Ordre { get; set; }
+        public string RespoContact { get; set; }
     
-        public virtual TypeTache TypeTache { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Creneau> Creneaux { get; set; }
+        public virtual TypeTache TypeTache { get; set; }
     }
 }
