@@ -216,14 +216,19 @@ namespace FestivArts.Models.Entity
 
         }
 
-        public  string PrenomN
+        public  string IdPrenomN
         {
-            get { return this.Id +" - " +this.Prenom + " " + this.Nom.Substring(0, 1); }
+            get { return this.Id +" - " +this.PrenomN; }
+        }
+
+        public string PrenomN
+        {
+            get { return this.Prenom + " " + this.Nom.Substring(0, 1); }
         }
 
         public override string ToString()
         {
-            return PrenomN;
+            return IdPrenomN;
         }
 
         public string GetExcelKey(AffectationStatusEnum status)
@@ -251,7 +256,7 @@ namespace FestivArts.Models.Entity
 
         public XLColor GetBenevoleColor()
         {
-            int val = this.PrenomN.GetHashCode();
+            int val = this.IdPrenomN.GetHashCode();
 
             switch (val % 6)
             {

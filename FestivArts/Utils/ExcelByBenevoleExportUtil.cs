@@ -46,7 +46,7 @@ namespace FestivArts.Utils
 
                 var aff = p.Affectations.Where( s => s.BenevoleId == b.Id && s.Creneau.CreneauDef.JourId == j.Id);
                 var disp = b.Dispoes.Where(s => s.CreneauDef.JourId == j.Id && s.EstDispo);
-                FillBenevole(sheet, ctx, ref i, b, aff, disp, creneauxDef);
+                FillBenevole(sheet, ctx, ref i, b, aff, disp, creneauxDef, readable);
                 i ++;
             }
             if (!readable)
@@ -57,6 +57,10 @@ namespace FestivArts.Utils
         }
         private static void FillCalculManqueDispo(IXLRow row, FestivArtsContext ctx, JourEvenement j)
         {
+            IXLCell ce = row.Cell(1);
+            ce.Style.Font.Bold = true;
+            ce.Value = "Total manque/surplus dispo";
+
             int i = 2;
             foreach(CreneauDef cd in ctx.CreneauDefs.Include("Dispoes").Include("Creneaux").Where( c => c.JourId == j.Id).ToList())
             {
@@ -80,7 +84,7 @@ namespace FestivArts.Utils
             }
         }
 
-        private static void FillBenevole(IXLWorksheet sheet, FestivArtsContext ctx, ref int row, Benevole b, IEnumerable<Affectation> affectations, IEnumerable<Dispo> dispos, IEnumerable<CreneauDef> creneaux)
+        private static void FillBenevole(IXLWorksheet sheet, FestivArtsContext ctx, ref int row, Benevole b, IEnumerable<Affectation> affectations, IEnumerable<Dispo> dispos, IEnumerable<CreneauDef> creneaux, bool readable)
         {
             var aff = new Dictionary<int, List<Affectation>>();
             var disp = new Dictionary<int, Dispo>();
@@ -98,7 +102,7 @@ namespace FestivArts.Utils
 
             IXLRow r = sheet.Row(row);
             IXLCell c = r.Cell(1);
-            c.Value = b.ToString();
+            c.Value = readable ? b.PrenomN : b.IdPrenomN;
 
             int i = 2;
             int prevTacheId = -1;

@@ -29,13 +29,13 @@ namespace FestivArts.Controllers
 
         }
 
-        public ActionResult ByBenevole()
+        public ActionResult ByBenevole(bool? readable)
         {
             var workbook = new XLWorkbook();
             using (var ctx = new FestivArtsContext())
             {
                 Planning p = ctx.Plannings.Include("Affectations.Benevole").OrderByDescending(s => s.Date).FirstOrDefault();
-                ExcelByBenevoleExportUtil.FillPlanning(workbook, ctx, p);
+                ExcelByBenevoleExportUtil.FillPlanning(workbook, ctx, p, readable??true );
             }
             var stream = new MemoryStream();
             workbook.SaveAs(stream);
