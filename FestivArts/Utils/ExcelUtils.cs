@@ -47,9 +47,7 @@ namespace FestivArts.Utils
 
         public static void FillNewPlanning(XLWorkbook book,FestivArtsContext ctx,  JourEvenement jour,bool readableExport = false)
         {
-
             FillPlanning(book, ctx, jour, null, readableExport);
-            
         }
 
 
@@ -181,9 +179,6 @@ namespace FestivArts.Utils
                 }
                 i++;
             }
-
-        
-
         }
 
 
@@ -218,12 +213,6 @@ namespace FestivArts.Utils
                 FIllNewRow(r, jour, tache, p, i == 0, i == maxB - 1, i, affectations,  readableExport);
                 line++;
             }
-     
-
-
-
-
-
         }
     }
 }
