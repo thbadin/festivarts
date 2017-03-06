@@ -13,7 +13,6 @@ namespace FestivArts.Utils
     {
         public static void ImportPlanning(Planning p, FestivArtsContext ctx, XLWorkbook book )
         {
-            Stopwatch watch = Stopwatch.StartNew();
             foreach (var sheet in book.Worksheets) 
             {
                 int jourId;
@@ -47,16 +46,8 @@ namespace FestivArts.Utils
                         ImportTache(sheet, ref line, t, j, p, ctx);
                     }
                     line++;
-
-
                 }
-
-
             }
-            watch.Stop();
-            var ts = watch.Elapsed;
-
-
         }
 
         private static void ImportTache(IXLWorksheet sheet, ref int line, Tache t, JourEvenement jour, Planning p, FestivArtsContext ctx)
