@@ -2,6 +2,7 @@
 using FestivArts.Models.Entity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -45,14 +46,8 @@ namespace FestivArts.Utils
                         ImportTache(sheet, ref line, t, j, p, ctx);
                     }
                     line++;
-
-
                 }
-
-
             }
-
-
         }
 
         private static void ImportTache(IXLWorksheet sheet, ref int line, Tache t, JourEvenement jour, Planning p, FestivArtsContext ctx)
@@ -61,10 +56,11 @@ namespace FestivArts.Utils
             line++;
             int maxB = t.GetMaxBenevoleByDay(jour.Id);
             Regex regex = new Regex("^([0-9]+)");
-            List<Affectation> aAjouter = new List<Affectation>();
+            var aAjouter = new Dictionary<int, HashSet<int>>();
+         
+
             for (int l = 0; l < maxB; l++)
             {
-
                 IXLRow r = sheet.Row(line);
                 int i = ExcelUtils.FIRST_PLAN_COLUMN;
                 foreach (CreneauDef d in jour.CreneauDefs.OrderBy(s => s.NoCreneau))
@@ -85,40 +81,56 @@ namespace FestivArts.Utils
                             if (c == null)
                                 throw new ImportException(string.Format("Cell ({0}) Tache {1} : creneau introuvable. Creneau def {2}'", cell.Address.ToStringRelative(true), t.Nom, d.Id));
 
-                            if (aAjouter.Count(s => s.BenevoleId == b.Id && s.CreneauId == c.Id) == 0)
+                            if(! aAjouter.ContainsKey(b.Id))
                             {
-                                Affectation af = new Affectation()
-                                {
-                                    BenevoleId = b.Id,
-                                    PlanningId = p.Id,
-                                    CreneauId = c.Id
-                                };
-                                aAjouter.Add(af);
+                                aAjouter.Add(b.Id, new HashSet<int>());
                             }
-
+                            if(!aAjouter[b.Id].Contains(c.Id))
+                            {
+                                aAjouter[b.Id].Add(c.Id);
+                            }
                         }
                         else
                         {
                             throw new ImportException(string.Format("Cell ({0}) ne correspond pas a un n° de bénévole : {1}'", cell.Address.ToStringRelative(true),  benStr));
                         }
                     }
-
                     i++;
                 }
                 line++;
-                if (aAjouter.Count > 0)
+            }
+            if (aAjouter.Count > 0)
+            {
+                    
+                    var anciensA = ctx.Affectations.Where(s => s.Creneau.CreneauDef.JourId == jour.Id &&
+                        s.PlanningId == p.Id && s.Creneau.TacheId == t.Id).ToList();
+                foreach(Affectation a in anciensA)
                 {
-                    if (p != null)
+                    if(aAjouter.ContainsKey(a.BenevoleId) && aAjouter[a.BenevoleId].Contains(a.CreneauId))
                     {
-                        var asuppr = ctx.Affectations.Where(s => s.Creneau.CreneauDef.JourId == jour.Id &&
-                            s.PlanningId == p.Id && s.Creneau.TacheId == t.Id).ToList();
-                        ctx.Affectations.RemoveRange(asuppr);
-                        ctx.SaveChanges();
+                        //L'affectation existait déjà, on ne fait rien
+                        aAjouter[a.BenevoleId].Remove(a.CreneauId);
+                    }else
+                    {
+                        //N'existe plus, on la supprime;
+                        ctx.Affectations.Remove(a);
                     }
-                    ctx.Affectations.AddRange(aAjouter);
-
-                    ctx.SaveChanges();
                 }
+
+                foreach(var kv in aAjouter.Where( s => s.Value.Count > 0 ).ToList())
+                {
+                    foreach(var v in kv.Value)
+                    {
+                        Affectation a = new Affectation()
+                        {
+                            BenevoleId = kv.Key,
+                            CreneauId = v,
+                            PlanningId = p.Id
+                        };
+                        ctx.Affectations.Add(a);
+                    }
+                }
+                ctx.SaveChanges();
             }
         }
     }

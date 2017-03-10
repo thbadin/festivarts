@@ -12,18 +12,20 @@ namespace FestivArts.Tests
     [TestClass]
     public class ExcelTests
     {
+        [TestInitialize]
         [TestCleanup]
-        public void CleanUp()
+        public void InitializeCleanUp()
         { 
                  //Clean
             using (var ctx = new FestivArtsContext())
             {
-                foreach (var p in ctx.Plannings.Where(s => s.Nom.StartsWith("TUImportExport")))
+                List<Planning> plans = ctx.Plannings.Where(s => s.Nom.StartsWith("TUImportExport")).ToList();
+                foreach (var p in plans)
                 {
                     ctx.Affectations.RemoveRange(p.Affectations);
                     ctx.Plannings.Remove(p);
+                    ctx.SaveChanges();
                 }
-                ctx.SaveChanges();
             }
         }
 
@@ -40,9 +42,10 @@ namespace FestivArts.Tests
                 ctx.Plannings.Add(p2);
                 ctx.SaveChanges();
                 int i = 0, j = 0;
-                foreach (var c in ctx.Creneaux) 
+                var benevoles = ctx.Benevoles.ToList();
+                foreach (var c in ctx.Creneaux.ToList()) 
                 {
-                    foreach (var b in ctx.Benevoles)
+                    foreach (var b in benevoles)
                     {
                         var a = new Affectation() { BenevoleId = b.Id, PlanningId = p.Id, CreneauId = c.Id };
 
@@ -56,8 +59,8 @@ namespace FestivArts.Tests
                     }
                     i++;
                     j = 0;
+                    ctx.SaveChanges();
                 }
-                ctx.SaveChanges();
 
 
                 Assert.AreEqual(ctx.Creneaux.Sum(s => s.NbBenevoleMax), p.Affectations.Count);
@@ -122,10 +125,10 @@ namespace FestivArts.Tests
                     {
                         
                         var wb = new XLWorkbook(workbooks[j.Id]);
-                        wb.SaveAs(@"C:\Users\Titho\Desktop\testResult\" + j.Nom + ".xlsx");
+                        wb.SaveAs(@"D:\testResult\" + j.Nom + ".xlsx");
                         wb = new XLWorkbook();
                         ExcelUtils.FillPlanning(wb, ctx, j, pres);
-                        wb.SaveAs(@"C:\Users\Titho\Desktop\testResult\" + j.Nom + "_res.xlsx");
+                        wb.SaveAs(@"D:\testResult\" + j.Nom + "_res.xlsx");
 
                         throw;
                     }
