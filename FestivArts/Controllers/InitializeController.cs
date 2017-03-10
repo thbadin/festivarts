@@ -86,20 +86,22 @@ namespace FestivArts.Controllers
                             Telephone = row.Cell(c++).GetValue<string>(),
                             Mail = row.Cell(c++).GetValue<string>().Trim().ToLower(),
                             Permis = row.Cell(c++).GetValue<string>(),
-                            PreferenceJeudi = row.Cell(c++).GetValue<string>(),
-                            DispoJeudi = row.Cell(c++).GetValue<string>(),
-                            CommentaireJeudi = row.Cell(c++).GetValue<string>(),
-                            GardienageJeudi = row.Cell(c++).GetValue<string>(),
-                            PreferenceAutres = row.Cell(c++).GetValue<string>(),
-                            NonPreferenceAutres = row.Cell(c++).GetValue<string>(),
-                            DispoVendredi = row.Cell(c++).GetValue<string>(),
-                            CommentaireVendredi = row.Cell(c++).GetValue<string>(),
+                            DispoMercredi = row.Cell(c+=2).GetValue<string>(),
+                            CommentaireMercredi = row.Cell(c++).GetValue<string>(),
+                            Preference = row.Cell(c+=2).GetValue<string>(),
+                            NonPreference = row.Cell(c++).GetValue<string>(),
+                            DispoSamedi = row.Cell(c++).GetValue<string>(),
+                            CommentaireSamedi = row.Cell(c++).GetValue<string>(),
                             DispoDimanche = row.Cell(c++).GetValue<string>(),
                             CommentaireDimanche = row.Cell(c++).GetValue<string>(),
                             DispoLundi = row.Cell(c++).GetValue<string>(),
                             CommentaireLundi = row.Cell(c++).GetValue<string>(),
-                            DispoSamedi = row.Cell(c++).GetValue<string>(),
-                            CommentaireSamedi = row.Cell(c++).GetValue<string>(),
+                            PrecisionGeneral = row.Cell(c+=2).GetValue<string>(),
+                            DispoVendredi = row.Cell(c++).GetValue<string>(),
+                            CommentaireVendredi = row.Cell(c++).GetValue<string>(),
+                            Majeur = row.Cell(c += 2).GetValue<string>(),
+                            DispoJeudi = row.Cell(c++).GetValue<string>(),
+                            CommentaireJeudi = row.Cell(c++).GetValue<string>()
                         };
                         string valid = row.Cell(c).GetValue<string>().Trim();
                         if(valid == "1")
@@ -124,8 +126,7 @@ namespace FestivArts.Controllers
                 b.Prenom = UppercaseFirst(g.FormatedPrenom.Trim());
                 b.Tel = g.FormatedTel;
                 b.Permis = g.APermis;
-
-
+                b.Majeur = g.EstMajeur;
             }
             db.SaveChanges();
 
@@ -171,6 +172,9 @@ namespace FestivArts.Controllers
                         string dispoTxt;
                         switch(c.JourEvenement.Nom.Trim().ToLower())
                         {
+                            case "mercedi":
+                                dispoTxt = g.DispoMercredi;
+                                break;
                             case "jeudi":
                                 dispoTxt = g.DispoJeudi;
                                 break;
@@ -214,6 +218,9 @@ namespace FestivArts.Controllers
                     string dispoTxt;
                     switch (j.Nom.Trim().ToLower())
                     {
+                        case "mercredi":
+                            dispoTxt = g.CommentaireMercredi;
+                            break;
                         case "jeudi":
                             dispoTxt = g.CommentaireJeudi;
                             break;

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FestivArts.Models.Entity.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FestivArts.Models.Entity.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Affectation">
           <Key>
             <PropertyRef Name="BenevoleId" />
@@ -26,6 +26,7 @@
           <Property Name="Tel" Type="varchar" MaxLength="15" />
           <Property Name="Commentaire" Type="text" />
           <Property Name="Permis" Type="bit" Nullable="false" />
+          <Property Name="Majeur" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CommentaireDispo">
           <Key>
@@ -344,8 +345,7 @@
             <End Role="Tache" EntitySet="Tache" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FestivArts.Models.Entity" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -377,6 +377,7 @@
           <NavigationProperty Name="CommentaireDispoes" Relationship="Self.FK_CommentaireDispo_Benevole" FromRole="Benevole" ToRole="CommentaireDispo" />
           <NavigationProperty Name="Dispoes" Relationship="Self.FK_Dispo_Benevole" FromRole="Benevole" ToRole="Dispo" />
           <NavigationProperty Name="Preferences" Relationship="Self.FK_Preference_Benevole" FromRole="Benevole" ToRole="Preference" />
+          <Property Name="Majeur" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CommentaireDispo">
           <Key>
@@ -732,6 +733,7 @@
           <EntitySetMapping Name="Benevoles">
             <EntityTypeMapping TypeName="FestivArts.Models.Entity.Benevole">
               <MappingFragment StoreEntitySet="Benevole">
+                <ScalarProperty Name="Majeur" ColumnName="Majeur" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nom" ColumnName="Nom" />
                 <ScalarProperty Name="Prenom" ColumnName="Prenom" />

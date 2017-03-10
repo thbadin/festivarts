@@ -80,9 +80,8 @@ namespace FestivArts.Models.Entity
                 {
                     dic.Add(t, 0);
                 }
-                parsePrefString(dic, PreferenceJeudi);
-                parsePrefString(dic, PreferenceAutres);
-                parsePrefString(dic, NonPreferenceAutres, -1);
+                parsePrefString(dic, Preference);
+                parsePrefString(dic, NonPreference, -1);
                 return dic;
             }
         }
@@ -97,7 +96,8 @@ namespace FestivArts.Models.Entity
             }
         }
 
-        public string PreferenceJeudi { get; set; }
+        public string DispoMercredi { get; set; }
+        public string CommentaireMercredi { get; set; }
         public string DispoJeudi { get; set; }
         public string CommentaireJeudi { get; set; }
         public string DispoVendredi { get; set; }
@@ -106,16 +106,21 @@ namespace FestivArts.Models.Entity
         public string CommentaireSamedi { get; set; }
         public string DispoDimanche { get; set; }
         public string CommentaireDimanche { get; set; }
-        public string PreferenceAutres { get; set; }
-        public string NonPreferenceAutres { get; set; }
+        public string Preference{ get; set; }
+        public string NonPreference{ get; set; }
         public string Permis { private get; set; }
+        public string PrecisionGeneral {  get; set; }
+        public string Majeur { private get; set; }
 
         public bool APermis 
         {
             get { return Permis.Trim().ToLower() == "oui"; }
         }
-
-        public string GardienageJeudi { get; set; }
+        public bool EstMajeur
+        {
+            get { return Majeur.Trim().ToLower() == "oui"; }
+        }
+        
 
         public string DispoLundi { get; set; }
 

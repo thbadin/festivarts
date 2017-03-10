@@ -30,6 +30,7 @@ namespace FestivArts.Models.Entity
         public string Tel { get; set; }
         public string Commentaire { get; set; }
         public bool Permis { get; set; }
+        public bool Majeur { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Affectation> Affectations { get; set; }
