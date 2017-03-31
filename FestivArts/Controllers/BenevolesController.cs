@@ -100,13 +100,13 @@ namespace FestivArts.Controllers
             benevole.FillDispoByDayFromDb();
             var dico = new Dictionary<int, JourEvenement>();
             var coms = new Dictionary<int, string>();
-            foreach (var j in db.JourEvenements)
+
+            ViewBag.Jours = db.JourEvenements.OrderBy(j => j.Ordre).ToList();
+            foreach (var j in ViewBag.Jours)
             {
                 var strDispo = benevole.CommentaireDispoes.FirstOrDefault(s => s.JourId == j.Id);
-                dico.Add(j.Id, j);
                 coms.Add(j.Id, strDispo == null ? "" : strDispo.Commentaire);
             }
-            ViewBag.Jours = dico;
             ViewBag.Coms = coms;
 
             var nextBenevole = db.Benevoles.OrderBy(s => s.Id).FirstOrDefault(s => s.Id > benevole.Id);

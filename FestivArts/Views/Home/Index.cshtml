@@ -37,7 +37,8 @@
     </div>
     
     <div class="col-md-4">
-        @Html.ActionLink("Planning", "ByBenevole", "Excel")
+                @Html.ActionLink("Planning", "ByBenevole", "Excel", new { readable = false } ,null)|
+                @Html.ActionLink("R", "ByBenevole", "Excel")
     </div>
 
 </div>

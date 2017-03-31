@@ -124,6 +124,7 @@ namespace FestivArts.Controllers
                 b.Tel = g.FormatedTel;
                 b.Permis = g.APermis;
                 b.Majeur = g.EstMajeur;
+                b.Commentaire = g.PrecisionGeneral;
             }
             db.SaveChanges();
 
