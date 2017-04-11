@@ -63,12 +63,16 @@ namespace FestivArts.Models.Entity
                 dic[TypeTacheEnum.Bar] += (1 * mult);
             if (str.Contains("place"))
                 dic[TypeTacheEnum.Place] += (1 * mult);
-            if (str.Contains("catering"))
+            if (str.Contains("catering") || str.Contains("cathering"))
                 dic[TypeTacheEnum.Catering] += (1 * mult);
             if (str.Contains("logistique"))
                 dic[TypeTacheEnum.Logistique] += (1 * mult);
             if (str.Contains("eco"))
                 dic[TypeTacheEnum.Ecocom] += (1 * mult);
+            if (str.Contains("artiste"))
+                dic[TypeTacheEnum.AccueilArtiste] += (1 * mult);
+            if (str.Contains("tech"))
+                dic[TypeTacheEnum.Technique] += (1 * mult);
         }
 
         public Dictionary<TypeTacheEnum, int> Prefs 

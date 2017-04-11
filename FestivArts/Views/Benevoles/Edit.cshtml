@@ -65,6 +65,21 @@
                 @Html.DisplayFor(model => model.Permis)
             </dd>
 
+            <dt>
+                Preferences
+            </dt>
+
+            <dd>
+                @string.Join(",",Model.Preferences.Where(p => p.Valeur > 0).Select(s => s.TypeTache.Nom))
+            </dd>
+            <dt>
+                Non preference
+            </dt>
+
+            <dd>
+                @string.Join(",", Model.Preferences.Where(p => p.Valeur < 0).Select(s => s.TypeTache.Nom))
+            </dd>
+
         </dl>
 
         <div class="form-group">

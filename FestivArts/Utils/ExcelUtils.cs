@@ -81,8 +81,10 @@ namespace FestivArts.Utils
                 r.Cell(3).Style.Font.Bold = true;
                 r.Cell(5).Value = "Tel";
                 r.Cell(5).Style.Font.Bold = true;
-                r.Cell(7).Value = "Permis";
+                r.Cell(7).Value = "Email";
                 r.Cell(7).Style.Font.Bold = true;
+                r.Cell(10).Value = "Permis";
+                r.Cell(10).Style.Font.Bold = true;
                 i++;
                 foreach (Benevole b in benevoles.OrderBy(s => s.Prenom))
                 {
@@ -90,7 +92,8 @@ namespace FestivArts.Utils
                     r.Cell(2).Value = b.Prenom;
                     r.Cell(3).Value = b.Nom;
                     r.Cell(5).Value = "'" + b.Tel;
-                    r.Cell(7).Value = b.Permis ? "Oui" : "Non";
+                    r.Cell(7).Value =  b.Email;
+                    r.Cell(10).Value = b.Permis ? "Oui" : "Non";
 
                     i++;
                 }

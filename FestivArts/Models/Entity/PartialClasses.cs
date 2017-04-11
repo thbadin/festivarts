@@ -211,24 +211,32 @@ namespace FestivArts.Models.Entity
                     }
                 }
             }
-            
-
-
         }
 
-        public  string IdPrenomN
-        {
-            get { return this.Id +" - " +this.PrenomN; }
-        }
 
-        public string PrenomN
+        public string GetPrenomUnique(IEnumerable<Benevole> liste)
         {
-            get { return this.Prenom + " " + this.Nom.Substring(0, 1); }
+            var sameNom = liste.Where(b => b.Prenom.Trim().ToLower() == this.Prenom.Trim().ToLower() && b.Id != this.Id).ToList() ;
+            if(sameNom.Count == 0)
+            {
+                return this.Prenom;
+            }
+            for(int i = 1; i < this.Nom.Trim().Length; i++)
+            {
+                sameNom = sameNom.Where(b => b.Nom.Trim().ToLower().Substring(0, i) == this.Nom.Trim().ToLower().Substring(0, i)).ToList();
+                if (sameNom.Count == 0)
+                {
+                    return this.Prenom+" "+this.Nom.Trim().Substring(0,i);
+                }
+
+            }
+            return this.Prenom + " " + this.Nom;
+
         }
 
         public override string ToString()
         {
-            return IdPrenomN;
+            return this.Id+" - "+this.Prenom;
         }
 
         public string GetExcelKey(AffectationStatusEnum status)
@@ -256,7 +264,7 @@ namespace FestivArts.Models.Entity
 
         public XLColor GetBenevoleColor()
         {
-            int val = this.IdPrenomN.GetHashCode();
+            int val = this.Nom.GetHashCode();
 
             switch (val % 6)
             {

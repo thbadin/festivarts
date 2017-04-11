@@ -12,6 +12,8 @@ namespace FestivArts.Models.Enums
         Bar= 3,
         Securite = 4,
         Ecocom = 5,
-        Place = 6
+        Place = 6,
+        Technique = 8,
+        AccueilArtiste = 9,
     }
 }

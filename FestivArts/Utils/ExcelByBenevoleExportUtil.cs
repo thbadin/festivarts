@@ -41,19 +41,100 @@ namespace FestivArts.Utils
             }
 
             int i = 3;
-            foreach (var b in ctx.Benevoles.OrderBy( s => s.Prenom))
+            var listeBenevole = ctx.Benevoles.ToList();
+            foreach (var b in listeBenevole.OrderBy( s => s.Prenom))
             {
 
                 var aff = p.Affectations.Where( s => s.BenevoleId == b.Id && s.Creneau.CreneauDef.JourId == j.Id);
                 var disp = b.Dispoes.Where(s => s.CreneauDef.JourId == j.Id && s.EstDispo);
-                FillBenevole(sheet, ctx, ref i, b, aff, disp, creneauxDef, readable);
+                FillBenevole(sheet, ctx, ref i, b, aff, disp, creneauxDef, listeBenevole, readable);
                 i ++;
             }
             if (!readable)
             {
                 i += 1;
                 FillCalculManqueDispo(sheet.Row(i), ctx, j);
+
+                i += 1;
+                FillNbBenevoleRepas(sheet.Row(i), ctx, j);
+                i += 1;
+                FillNbBenevoleRepasReel(sheet.Row(i), ctx, j);
             }
+        }
+
+
+        private static int NbBenevoleRepas(FestivArtsContext ctx, JourEvenement j, int debut, int fin)
+        {
+            Dictionary<int, int> nbBeneParTache = new Dictionary<int, int>();
+            var crenDefs = ctx.CreneauDefs.Include("Creneaux").Where(c => c.JourId == j.Id).ToList().Where(c => c.Debut.Hour >= debut && c.Fin.Hour <= fin && c.Fin.DayOfYear == j.DateDebut.DayOfYear).ToList();
+            foreach (CreneauDef cd in crenDefs)
+            {
+                foreach (var cr in cd.Creneaux)
+                {
+                    if (!nbBeneParTache.ContainsKey(cr.TacheId))
+                    {
+                        nbBeneParTache.Add(cr.TacheId, 0);
+                    }
+                    nbBeneParTache[cr.TacheId] = Math.Max(nbBeneParTache[cr.TacheId], cr.NbBenevoleMax);
+                }
+            }
+            return nbBeneParTache.Values.Sum();
+        }
+
+        private static int NbBenevoleRepasReel(FestivArtsContext ctx, JourEvenement j, int debut, int fin)
+        {
+            HashSet<int> benevoles = new HashSet<int>();
+            foreach (CreneauDef cd in ctx.CreneauDefs.Include("Creneaux").Where(c => c.JourId == j.Id).ToList().Where(c => c.Debut.Hour >= debut && c.Fin.Hour <= fin && c.Fin.DayOfYear == j.DateDebut.DayOfYear))
+            {
+                
+                foreach (var cr in cd.Creneaux)
+                {
+                    cr.Affectations.Select(a => a.BenevoleId).ForEach(a => { if (!benevoles.Contains(a)) { benevoles.Add(a); } });
+                }
+            }
+            return benevoles.Count;
+        }
+
+        private static void FillNbBenevoleRepasReel(IXLRow row, FestivArtsContext ctx, JourEvenement j)
+        {
+            IXLCell ce = row.Cell(1);
+            ce.Style.Font.Bold = true;
+            ce.Value = "Nb  midi (reel): ";
+
+            ce = row.Cell(2);
+            ce.Style.Font.Bold = true;
+            ce.Value = NbBenevoleRepasReel(ctx, j, 11, 14);
+
+            ce = row.Cell(4);
+            ce.Style.Font.Bold = true;
+            ce.Value = "Nb  soir (reel): ";
+
+            ce = row.Cell(5);
+            ce.Style.Font.Bold = true;
+            ce.Value = NbBenevoleRepasReel(ctx, j, 18, 21);
+
+
+        }
+
+        private static void FillNbBenevoleRepas(IXLRow row, FestivArtsContext ctx, JourEvenement j)
+        {
+            IXLCell ce = row.Cell(1);
+            ce.Style.Font.Bold = true;
+            ce.Value = "Nb  midi : ";
+
+            ce = row.Cell(2);
+            ce.Style.Font.Bold = true;
+            ce.Value = NbBenevoleRepas(ctx,j,11,14);
+
+            ce = row.Cell(4);
+            ce.Style.Font.Bold = true;
+            ce.Value = "Nb  soir : ";
+
+            ce = row.Cell(5);
+            ce.Style.Font.Bold = true;
+            ce.Value = NbBenevoleRepas(ctx, j, 18, 21);
+
+
         }
         private static void FillCalculManqueDispo(IXLRow row, FestivArtsContext ctx, JourEvenement j)
         {
@@ -84,7 +165,7 @@ namespace FestivArts.Utils
             }
         }
 
-        private static void FillBenevole(IXLWorksheet sheet, FestivArtsContext ctx, ref int row, Benevole b, IEnumerable<Affectation> affectations, IEnumerable<Dispo> dispos, IEnumerable<CreneauDef> creneaux, bool readable)
+        private static void FillBenevole(IXLWorksheet sheet, FestivArtsContext ctx, ref int row, Benevole b, IEnumerable<Affectation> affectations, IEnumerable<Dispo> dispos, IEnumerable<CreneauDef> creneaux, IEnumerable<Benevole> listeBenevole, bool readable)
         {
             var aff = new Dictionary<int, List<Affectation>>();
             var disp = new Dictionary<int, Dispo>();
@@ -102,7 +183,7 @@ namespace FestivArts.Utils
 
             IXLRow r = sheet.Row(row);
             IXLCell c = r.Cell(1);
-            c.Value = readable ? b.PrenomN : b.IdPrenomN;
+            c.Value = (readable ? "" : b.Id+" - ") + b.GetPrenomUnique(listeBenevole);
 
             int i = 2;
             int prevTacheId = -1;

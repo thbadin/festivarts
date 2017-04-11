@@ -67,177 +67,182 @@ namespace FestivArts.Controllers
         [HttpPost]
         public ActionResult ImportBenevolePost()
         {
-            var list = new List<GoogleDriveResult>();
-            var ist = Request.Files[0].InputStream;
-            ist.Position = 0;
-            using(var workbook = new XLWorkbook(@"D:\import.xlsx") )
+
+            if (ModelState.IsValid && Request.Files.Count == 1)
             {
-                using (var ws = workbook.Worksheet(1)) 
+
+                var list = new List<GoogleDriveResult>();
+
+                using (var workbook = new XLWorkbook(Request.Files[0].InputStream))
                 {
-                    int i = 2;
-                    var row = ws.Row(i);
-                    while (!row.IsEmpty()) 
+
+                    using (var ws = workbook.Worksheet(1))
                     {
-                        GoogleDriveResult g = new GoogleDriveResult();
-                        g.Nom = row.Cell("B").GetValue<string>();
-                        g.Prenom = row.Cell("C").GetValue<string>();
-                        g.Telephone = row.Cell("D").GetValue<string>();
-                        g.Mail = row.Cell("E").GetValue<string>().Trim().ToLower();
-                        g.Permis = row.Cell("F").GetValue<string>();
-                        g.DispoMercredi = row.Cell("H").GetValue<string>();
-                        g.CommentaireMercredi = row.Cell("I").GetValue<string>();
-                        g.Preference = row.Cell("K").GetValue<string>();
-                        g.NonPreference = row.Cell("L").GetValue<string>();
-                        g.DispoSamedi = row.Cell("M").GetValue<string>();
-                        g.CommentaireSamedi = row.Cell("N").GetValue<string>();
-                        g.DispoDimanche = row.Cell("O").GetValue<string>();
-                        g.CommentaireDimanche = row.Cell("P").GetValue<string>();
-                        g.DispoLundi = row.Cell("Q").GetValue<string>();
-                        g.CommentaireLundi = row.Cell("R").GetValue<string>();
-                        g.PrecisionGeneral = row.Cell("T").GetValue<string>();
-                        g.DispoVendredi = row.Cell("U").GetValue<string>();
-                        g.CommentaireVendredi = row.Cell("V").GetValue<string>();
-                        g.Majeur = row.Cell("X").GetValue<string>();
-                        g.DispoJeudi = row.Cell("Y").GetValue<string>();
-                        g.CommentaireJeudi = row.Cell("Z").GetValue<string>();
-                        string valid = row.Cell("AA").GetValue<string>().Trim();
-                        if(valid == "1")
-                            list.Add(g);
-                        i++;
-                        row = ws.Row(i);
-                    }
-                }
-            }
-
-            //Creation Bénévoles
-            foreach (var g in list) 
-            {
-                Benevole b = db.Benevoles.FirstOrDefault(s => s.Email.Trim().ToLower() == g.FormatedMail);
-                if (b == null) 
-                {
-                    b = new Benevole();
-                    db.Benevoles.Add(b);
-                    b.Email = g.FormatedMail;
-                }
-                b.Nom = UppercaseFirst(g.FormatedNom.Trim());
-                b.Prenom = UppercaseFirst(g.FormatedPrenom.Trim());
-                b.Tel = g.FormatedTel;
-                b.Permis = g.APermis;
-                b.Majeur = g.EstMajeur;
-                b.Commentaire = g.PrecisionGeneral;
-            }
-            db.SaveChanges();
-
-            //Gestion des preferences
-            foreach (var g in list)
-            {
-                Benevole b = db.Benevoles.Include("Preferences").First(s => s.Email.Trim().ToLower() == g.FormatedMail);
-                foreach (var kv in g.Prefs) 
-                {
-                    Preference p = b.Preferences.FirstOrDefault( s => s.TypeTacheId == ((int) kv.Key) &&  s.BenevoleId == b.Id);
-                    if (p == null)
-                    {
-                        p = new Preference();
-                        db.Preferences.Add(p);
-                        p.TypeTacheId = (int)kv.Key;
-                        p.BenevoleId = b.Id;
-                    }
-                    p.Valeur = kv.Value;
-                    db.SaveChanges();
-                }
-            }
-            db.SaveChanges();
-
-
-            //Gestion des dispo
-            foreach (var g in list)
-            {
-                Benevole b = db.Benevoles.Include("Dispoes").First(s => s.Email.Trim().ToLower() == g.FormatedMail);
-                foreach (var c in db.CreneauDefs.Include("JourEvenement"))
-                {
-                    Dispo d = b.Dispoes.FirstOrDefault(s => s.CreneauDefId == c.Id && s.BenevoleId == b.Id);
-                    if (d == null)
-                    {
-                        d = new Dispo();
-                        db.Dispoes.Add(d);
-                        d.CreneauDefId = c.Id;
-                        d.BenevoleId = b.Id;
-                        d.ModifManuel = false;
-                    }
-
-                    if (!d.ModifManuel) 
-                    {
-                        string dispoTxt;
-                        switch(c.JourEvenement.Nom.Trim().ToLower())
+                        int i = 2;
+                        var row = ws.Row(i);
+                        while (!row.IsEmpty())
                         {
-                            case "mercredi":
-                                dispoTxt = g.DispoMercredi;
-                                break;
-                            case "jeudi":
-                                dispoTxt = g.DispoJeudi;
-                                break;
-                            case "vendredi":
-                                dispoTxt = g.DispoVendredi;
-                                break;
-                            case "samedi":
-                                dispoTxt = g.DispoSamedi;
-                                break;
-                            case "dimanche":
-                                dispoTxt = g.DispoDimanche;
-                                break;
-                            default :
-                                throw new ArgumentException("c.JourEvenement.Nom");
+                            GoogleDriveResult g = new GoogleDriveResult();
+                            g.Nom = row.Cell("B").GetValue<string>();
+                            g.Prenom = row.Cell("C").GetValue<string>();
+                            g.Telephone = row.Cell("D").GetValue<string>();
+                            g.Mail = row.Cell("E").GetValue<string>().Trim().ToLower();
+                            g.Permis = row.Cell("F").GetValue<string>();
+                            g.DispoMercredi = row.Cell("H").GetValue<string>();
+                            g.CommentaireMercredi = row.Cell("I").GetValue<string>();
+                            g.Preference = row.Cell("K").GetValue<string>();
+                            g.NonPreference = row.Cell("L").GetValue<string>();
+                            g.DispoSamedi = row.Cell("M").GetValue<string>();
+                            g.CommentaireSamedi = row.Cell("N").GetValue<string>();
+                            g.DispoDimanche = row.Cell("O").GetValue<string>();
+                            g.CommentaireDimanche = row.Cell("P").GetValue<string>();
+                            g.DispoLundi = row.Cell("Q").GetValue<string>();
+                            g.CommentaireLundi = row.Cell("R").GetValue<string>();
+                            g.PrecisionGeneral = row.Cell("T").GetValue<string>();
+                            g.DispoVendredi = row.Cell("U").GetValue<string>();
+                            g.CommentaireVendredi = row.Cell("V").GetValue<string>();
+                            g.Majeur = row.Cell("X").GetValue<string>();
+                            g.DispoJeudi = row.Cell("Y").GetValue<string>();
+                            g.CommentaireJeudi = row.Cell("Z").GetValue<string>();
+                            string valid = row.Cell("AA").GetValue<string>().Trim();
+                            if (valid == "1")
+                                list.Add(g);
+                            i++;
+                            row = ws.Row(i);
                         }
-                        d.EstDispo = isDispo(dispoTxt, c);
-                        
                     }
+                }
+
+                //Creation Bénévoles
+                foreach (var g in list)
+                {
+                    Benevole b = db.Benevoles.FirstOrDefault(s => s.Email.Trim().ToLower() == g.FormatedMail);
+                    if (b == null)
+                    {
+                        b = new Benevole();
+                        db.Benevoles.Add(b);
+                        b.Email = g.FormatedMail;
+                    }
+                    b.Nom = UppercaseFirst(g.FormatedNom.Trim());
+                    b.Prenom = UppercaseFirst(g.FormatedPrenom.Trim());
+                    b.Tel = g.FormatedTel;
+                    b.Permis = g.APermis;
+                    b.Majeur = g.EstMajeur;
+                    b.Commentaire = g.PrecisionGeneral;
+                }
+                db.SaveChanges();
+
+                //Gestion des preferences
+                foreach (var g in list)
+                {
+                    Benevole b = db.Benevoles.Include("Preferences").First(s => s.Email.Trim().ToLower() == g.FormatedMail);
+                    foreach (var kv in g.Prefs)
+                    {
+                        Preference p = b.Preferences.FirstOrDefault(s => s.TypeTacheId == ((int)kv.Key) && s.BenevoleId == b.Id);
+                        if (p == null)
+                        {
+                            p = new Preference();
+                            db.Preferences.Add(p);
+                            p.TypeTacheId = (int)kv.Key;
+                            p.BenevoleId = b.Id;
+                        }
+                        p.Valeur = kv.Value;
+                        db.SaveChanges();
+                    }
+                }
+                db.SaveChanges();
+
+
+                //Gestion des dispo
+                foreach (var g in list)
+                {
+                    Benevole b = db.Benevoles.Include("Dispoes").First(s => s.Email.Trim().ToLower() == g.FormatedMail);
+                    foreach (var c in db.CreneauDefs.Include("JourEvenement"))
+                    {
+                        Dispo d = b.Dispoes.FirstOrDefault(s => s.CreneauDefId == c.Id && s.BenevoleId == b.Id);
+                        if (d == null)
+                        {
+                            d = new Dispo();
+                            db.Dispoes.Add(d);
+                            d.CreneauDefId = c.Id;
+                            d.BenevoleId = b.Id;
+                            d.ModifManuel = false;
+                        }
+
+                        if (!d.ModifManuel)
+                        {
+                            string dispoTxt;
+                            switch (c.JourEvenement.Nom.Trim().ToLower())
+                            {
+                                case "mercredi":
+                                    dispoTxt = g.DispoMercredi;
+                                    break;
+                                case "jeudi":
+                                    dispoTxt = g.DispoJeudi;
+                                    break;
+                                case "vendredi":
+                                    dispoTxt = g.DispoVendredi;
+                                    break;
+                                case "samedi":
+                                    dispoTxt = g.DispoSamedi;
+                                    break;
+                                case "dimanche":
+                                    dispoTxt = g.DispoDimanche;
+                                    break;
+                                default:
+                                    throw new ArgumentException("c.JourEvenement.Nom");
+                            }
+                            d.EstDispo = isDispo(dispoTxt, c);
+
+                        }
+                    }
+
+                    db.SaveChanges();
                 }
 
                 db.SaveChanges();
-            }
-
-            db.SaveChanges();
 
 
-            //Gestion des commentaire dispo
-            foreach (var g in list)
-            {
-                Benevole b = db.Benevoles.Include("Dispoes").First(s => s.Email.Trim().ToLower() == g.FormatedMail);
-                foreach (var j in db.JourEvenements)
+                //Gestion des commentaire dispo
+                foreach (var g in list)
                 {
-                    CommentaireDispo c = b.CommentaireDispoes.FirstOrDefault(s => s.JourId == j.Id && s.BenevoleId == b.Id);
-                    if (c == null)
+                    Benevole b = db.Benevoles.Include("Dispoes").First(s => s.Email.Trim().ToLower() == g.FormatedMail);
+                    foreach (var j in db.JourEvenements)
                     {
-                        c = new CommentaireDispo();
-                        b.CommentaireDispoes.Add(c);
-                        c.JourId = j.Id;
-                        c.BenevoleId = b.Id;
+                        CommentaireDispo c = b.CommentaireDispoes.FirstOrDefault(s => s.JourId == j.Id && s.BenevoleId == b.Id);
+                        if (c == null)
+                        {
+                            c = new CommentaireDispo();
+                            b.CommentaireDispoes.Add(c);
+                            c.JourId = j.Id;
+                            c.BenevoleId = b.Id;
+                        }
+                        string dispoTxt;
+                        switch (j.Nom.Trim().ToLower())
+                        {
+                            case "mercredi":
+                                dispoTxt = g.CommentaireMercredi;
+                                break;
+                            case "jeudi":
+                                dispoTxt = g.CommentaireJeudi;
+                                break;
+                            case "vendredi":
+                                dispoTxt = g.CommentaireVendredi;
+                                break;
+                            case "samedi":
+                                dispoTxt = g.CommentaireSamedi;
+                                break;
+                            case "dimanche":
+                                dispoTxt = g.CommentaireDimanche;
+                                break;
+                            default:
+                                throw new ArgumentException(j.Nom);
+                        }
+                        c.Commentaire = dispoTxt.Trim();
                     }
-                    string dispoTxt;
-                    switch (j.Nom.Trim().ToLower())
-                    {
-                        case "mercredi":
-                            dispoTxt = g.CommentaireMercredi;
-                            break;
-                        case "jeudi":
-                            dispoTxt = g.CommentaireJeudi;
-                            break;
-                        case "vendredi":
-                            dispoTxt = g.CommentaireVendredi;
-                            break;       
-                        case "samedi":   
-                            dispoTxt = g.CommentaireSamedi;
-                            break;       
-                        case "dimanche": 
-                            dispoTxt = g.CommentaireDimanche;
-                            break;
-                        default:
-                            throw new ArgumentException(j.Nom);
-                    }
-                    c.Commentaire = dispoTxt.Trim();
                 }
+                db.SaveChanges();
             }
-            db.SaveChanges();
             return View();
         }
 

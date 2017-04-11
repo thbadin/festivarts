@@ -73,74 +73,96 @@
                             @item.Affectations.Count(s => s.Creneau.CreneauDef.JourId == Model.SelectedJour)
                         </td>
                         <td>
-                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering).Valeur > 0)
+                            @if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering).Valeur > 0)
                             {
                                 <span class="label label-success">
                                     C
                                 </span>
                             }
-                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering).Valeur < 0)
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Catering).Valeur < 0)
                             {
                                 <span class="label label-danger">
                                     C
                                 </span>
                             }
-                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar).Valeur > 0)
+                            @if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar).Valeur > 0)
                             {
                                 <span class="label label-success">
                                     B
                                 </span>
                             }
-                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar).Valeur < 0)
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Bar).Valeur < 0)
                             {
                                 <span class="label label-danger">
                                     B
                                 </span>
                             }
-                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom).Valeur > 0)
+                            @if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom).Valeur > 0)
                             {
                                 <span class="label label-success">
                                     E
                                 </span>
                             }
-                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom).Valeur < 0)
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Ecocom).Valeur < 0)
                             {
                                 <span class="label label-danger">
                                     E
                                 </span>
                             }
-                            @if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique).Valeur > 0)
+                            @if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique).Valeur > 0)
                             {
                                 <span class="label label-success">
                                     L
                                 </span>
                             }
-                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique).Valeur < 0)
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Logistique).Valeur < 0)
                             {
                                 <span class="label label-danger">
                                     L
                                 </span>
-                            }@if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place).Valeur > 0)
+                            }@if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place).Valeur > 0)
                             {
                                 <span class="label label-success">
                                     P
                                 </span>
                             }
-                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place).Valeur < 0)
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Place).Valeur < 0)
                             {
                                 <span class="label label-danger">
                                     P
                                 </span>
-                            }@if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite).Valeur > 0)
+                            }@if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite).Valeur > 0)
                             {
                                 <span class="label label-success">
                                     S
                                 </span>
                             }
-                            else if (item.Preferences.First(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite).Valeur < 0)
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Securite).Valeur < 0)
                             {
                                 <span class="label label-danger">
                                     S
+                                </span>
+                            }@if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.AccueilArtiste) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.AccueilArtiste).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    A
+                                </span>
+                            }
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.AccueilArtiste) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.AccueilArtiste).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    A
+                                </span>
+                            }@if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Technique) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Technique).Valeur > 0)
+                            {
+                                <span class="label label-success">
+                                    T
+                                </span>
+                            }
+                            else if (item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Technique) != null && item.Preferences.FirstOrDefault(s => s.TypeTacheId == (int)FestivArts.Models.Enums.TypeTacheEnum.Technique).Valeur < 0)
+                            {
+                                <span class="label label-danger">
+                                    T
                                 </span>
                             }
                         </td>
