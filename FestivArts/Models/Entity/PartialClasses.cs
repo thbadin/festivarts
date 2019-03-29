@@ -307,7 +307,7 @@ namespace FestivArts.Models.Entity
         {
 
             DisposByDays = new Dictionary<int, Dictionary<int, Dispo>>();   
-            foreach (var d in Dispoes) 
+            foreach (var d in Dispoes.OrderBy(d => d.CreneauDef.JourId).ThenBy(d => d.CreneauDef.NoCreneau)) 
             {
                 if (!DisposByDays.ContainsKey(d.CreneauDef.JourId))
                     DisposByDays.Add(d.CreneauDef.JourId, new Dictionary<int, Dispo>());

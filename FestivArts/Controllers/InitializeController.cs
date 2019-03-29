@@ -82,29 +82,33 @@ namespace FestivArts.Controllers
                         var row = ws.Row(i);
                         while (!row.IsEmpty())
                         {
+                            int j = 2;
                             GoogleDriveResult g = new GoogleDriveResult();
-                            g.Nom = row.Cell("B").GetValue<string>();
-                            g.Prenom = row.Cell("C").GetValue<string>();
-                            g.Telephone = row.Cell("D").GetValue<string>();
-                            g.Mail = row.Cell("E").GetValue<string>().Trim().ToLower();
-                            g.Permis = row.Cell("F").GetValue<string>();
-                            g.DispoMercredi = row.Cell("H").GetValue<string>();
-                            g.CommentaireMercredi = row.Cell("I").GetValue<string>();
-                            g.Preference = row.Cell("K").GetValue<string>();
-                            g.NonPreference = row.Cell("L").GetValue<string>();
-                            g.DispoSamedi = row.Cell("M").GetValue<string>();
-                            g.CommentaireSamedi = row.Cell("N").GetValue<string>();
-                            g.DispoDimanche = row.Cell("O").GetValue<string>();
-                            g.CommentaireDimanche = row.Cell("P").GetValue<string>();
-                            g.DispoLundi = row.Cell("Q").GetValue<string>();
-                            g.CommentaireLundi = row.Cell("R").GetValue<string>();
-                            g.PrecisionGeneral = row.Cell("T").GetValue<string>();
-                            g.DispoVendredi = row.Cell("U").GetValue<string>();
-                            g.CommentaireVendredi = row.Cell("V").GetValue<string>();
-                            g.Majeur = row.Cell("X").GetValue<string>();
-                            g.DispoJeudi = row.Cell("Y").GetValue<string>();
-                            g.CommentaireJeudi = row.Cell("Z").GetValue<string>();
-                            string valid = row.Cell("AA").GetValue<string>().Trim();
+                            g.Nom = row.Cell(j++).GetValue<string>();
+                            g.Prenom = row.Cell(j++).GetValue<string>();
+                            g.Telephone = row.Cell(j++).GetValue<string>();
+                            g.Mail = row.Cell(j++).GetValue<string>().Trim().ToLower();
+                            g.Permis = row.Cell(j++).GetValue<string>();
+                            g.Majeur = row.Cell(j++).GetValue<string>();
+                            g.DispoCampus = row.Cell(j++).GetValue<string>();
+                            g.CommentaireCampus = row.Cell(j++).GetValue<string>();
+                            g.DispoMercredi = row.Cell(j++).GetValue<string>();
+                            g.CommentaireMercredi = row.Cell(j++).GetValue<string>();
+                            g.DispoJeudi = row.Cell(j++).GetValue<string>();
+                            g.CommentaireJeudi = row.Cell(j++).GetValue<string>();
+                            g.DispoVendredi = row.Cell(j++).GetValue<string>();
+                            g.CommentaireVendredi = row.Cell(j++).GetValue<string>();
+                            g.DispoSamedi = row.Cell(j++).GetValue<string>();
+                            g.CommentaireSamedi = row.Cell(j++).GetValue<string>();
+                            g.DispoDimanche = row.Cell(j++).GetValue<string>();
+                            g.CommentaireDimanche = row.Cell(j++).GetValue<string>();
+                            g.DispoLundi = row.Cell(j++).GetValue<string>();
+                            g.CommentaireLundi = row.Cell(j++).GetValue<string>();
+                            j += 2;
+                            g.Preference = row.Cell(j++).GetValue<string>();
+                            g.NonPreference = row.Cell(j++).GetValue<string>();
+                            g.PrecisionGeneral = row.Cell(j++).GetValue<string>();
+                                string valid = row.Cell(j++).GetValue<string>().Trim();
                             if (valid == "1")
                                 list.Add(g);
                             i++;
@@ -249,7 +253,7 @@ namespace FestivArts.Controllers
         private bool isDispo(string txt, CreneauDef c) 
         {
             txt = txt.ToLower();
-            if (c.Debut.Hour >= 7 && c.Fin.Hour <= 13 && c.Fin.Hour >= 7) 
+            if (c.Debut.Hour >= 6 && c.Fin.Hour <= 13 && c.Fin.Hour >= 6) 
             {
                 if (txt.Contains("matin"))
                     return true;

@@ -99,7 +99,8 @@ namespace FestivArts.Models.Entity
                 return Mail.Trim().ToLower();
             }
         }
-
+        public string DispoCampus { get; set; }
+        public string CommentaireCampus { get; set; }
         public string DispoMercredi { get; set; }
         public string CommentaireMercredi { get; set; }
         public string DispoJeudi { get; set; }
