@@ -12,7 +12,7 @@ namespace FestivArts.Utils
     {
         public static void FillPlanning(XLWorkbook book, FestivArtsContext ctx, Planning p, bool readable)
         {
-            foreach (var j in ctx.JourEvenements.Include("CreneauDefs.Creneaux.Affectations.Benevole"))
+            foreach (var j in ctx.JourEvenements.Include("CreneauDefs.Creneaux.Affectations.Benevole").OrderBy(j => j.Ordre))
             {
                 var worksheet = book.Worksheets.Add(j.Nom);
                 FillJour(worksheet, ctx, p, j, readable);

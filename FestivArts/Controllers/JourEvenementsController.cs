@@ -17,7 +17,7 @@ namespace FestivArts.Controllers
         // GET: JourEvenements
         public ActionResult Index()
         {
-            return View(db.JourEvenements.ToList());
+            return View(db.JourEvenements.OrderBy(j => j.Ordre).ToList());
         }
 
         // GET: JourEvenements/Details/5
