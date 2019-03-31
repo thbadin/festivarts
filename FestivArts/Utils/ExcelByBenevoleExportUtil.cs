@@ -89,7 +89,11 @@ namespace FestivArts.Utils
                 
                 foreach (var cr in cd.Creneaux)
                 {
-                    cr.Affectations.Select(a => a.BenevoleId).ForEach(a => { if (!benevoles.Contains(a)) { benevoles.Add(a); } });
+                    foreach (var a in cr.Affectations.Select(a => a.BenevoleId)) {
+                        if (!benevoles.Contains(a)) {
+                            benevoles.Add(a);
+                        }
+                    }
                 }
             }
             return benevoles.Count;
@@ -178,8 +182,10 @@ namespace FestivArts.Utils
                 aff[a.Creneau.CreneauDefId].Add(a);
 
             }
-            dispos.ForEach(s => disp.Add(s.CreneauDefId, s));
-
+            foreach (var s in dispos)
+            {
+                disp.Add(s.CreneauDefId, s);
+            }
 
             IXLRow r = sheet.Row(row);
             IXLCell c = r.Cell(1);

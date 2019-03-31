@@ -76,44 +76,42 @@ namespace FestivArts.Controllers
                 using (var workbook = new XLWorkbook(Request.Files[0].InputStream))
                 {
 
-                    using (var ws = workbook.Worksheet(1))
+                    var ws = workbook.Worksheet(1);
+                    int i = 2;
+                    var row = ws.Row(i);
+                    while (!row.IsEmpty())
                     {
-                        int i = 2;
-                        var row = ws.Row(i);
-                        while (!row.IsEmpty())
-                        {
-                            int j = 2;
-                            GoogleDriveResult g = new GoogleDriveResult();
-                            g.Nom = row.Cell(j++).GetValue<string>();
-                            g.Prenom = row.Cell(j++).GetValue<string>();
-                            g.Telephone = row.Cell(j++).GetValue<string>();
-                            g.Mail = row.Cell(j++).GetValue<string>().Trim().ToLower();
-                            g.Permis = row.Cell(j++).GetValue<string>();
-                            g.Majeur = row.Cell(j++).GetValue<string>();
-                            g.DispoCampus = row.Cell(j++).GetValue<string>();
-                            g.CommentaireCampus = row.Cell(j++).GetValue<string>();
-                            g.DispoMercredi = row.Cell(j++).GetValue<string>();
-                            g.CommentaireMercredi = row.Cell(j++).GetValue<string>();
-                            g.DispoJeudi = row.Cell(j++).GetValue<string>();
-                            g.CommentaireJeudi = row.Cell(j++).GetValue<string>();
-                            g.DispoVendredi = row.Cell(j++).GetValue<string>();
-                            g.CommentaireVendredi = row.Cell(j++).GetValue<string>();
-                            g.DispoSamedi = row.Cell(j++).GetValue<string>();
-                            g.CommentaireSamedi = row.Cell(j++).GetValue<string>();
-                            g.DispoDimanche = row.Cell(j++).GetValue<string>();
-                            g.CommentaireDimanche = row.Cell(j++).GetValue<string>();
-                            g.DispoLundi = row.Cell(j++).GetValue<string>();
-                            g.CommentaireLundi = row.Cell(j++).GetValue<string>();
-                            j += 2;
-                            g.Preference = row.Cell(j++).GetValue<string>();
-                            g.NonPreference = row.Cell(j++).GetValue<string>();
-                            g.PrecisionGeneral = row.Cell(j++).GetValue<string>();
-                                string valid = row.Cell(j++).GetValue<string>().Trim();
-                            if (valid == "1")
-                                list.Add(g);
-                            i++;
-                            row = ws.Row(i);
-                        }
+                        int j = 2;
+                        GoogleDriveResult g = new GoogleDriveResult();
+                        g.Nom = row.Cell(j++).GetValue<string>();
+                        g.Prenom = row.Cell(j++).GetValue<string>();
+                        g.Telephone = row.Cell(j++).GetValue<string>();
+                        g.Mail = row.Cell(j++).GetValue<string>().Trim().ToLower();
+                        g.Permis = row.Cell(j++).GetValue<string>();
+                        g.Majeur = row.Cell(j++).GetValue<string>();
+                        g.DispoCampus = row.Cell(j++).GetValue<string>();
+                        g.CommentaireCampus = row.Cell(j++).GetValue<string>();
+                        g.DispoMercredi = row.Cell(j++).GetValue<string>();
+                        g.CommentaireMercredi = row.Cell(j++).GetValue<string>();
+                        g.DispoJeudi = row.Cell(j++).GetValue<string>();
+                        g.CommentaireJeudi = row.Cell(j++).GetValue<string>();
+                        g.DispoVendredi = row.Cell(j++).GetValue<string>();
+                        g.CommentaireVendredi = row.Cell(j++).GetValue<string>();
+                        g.DispoSamedi = row.Cell(j++).GetValue<string>();
+                        g.CommentaireSamedi = row.Cell(j++).GetValue<string>();
+                        g.DispoDimanche = row.Cell(j++).GetValue<string>();
+                        g.CommentaireDimanche = row.Cell(j++).GetValue<string>();
+                        g.DispoLundi = row.Cell(j++).GetValue<string>();
+                        g.CommentaireLundi = row.Cell(j++).GetValue<string>();
+                        j += 2;
+                        g.Preference = row.Cell(j++).GetValue<string>();
+                        g.NonPreference = row.Cell(j++).GetValue<string>();
+                        g.PrecisionGeneral = row.Cell(j++).GetValue<string>();
+                            string valid = row.Cell(j++).GetValue<string>().Trim();
+                        if (valid == "1")
+                            list.Add(g);
+                        i++;
+                        row = ws.Row(i);
                     }
                 }
 

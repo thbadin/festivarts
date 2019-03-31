@@ -105,7 +105,11 @@ namespace FestivArts.Utils
         private static void FIllNewRow(IXLRow r, JourEvenement jour, Tache tache, Planning p, bool isFirst, bool isLast, int tacheLineCount, IEnumerable<Affectation> affectations, bool readableExport) 
         {
             Dictionary<int, Creneau> crenauxNeeded = new Dictionary<int, Creneau>();
-            tache.Creneaux.Where( s => s.CreneauDef.JourId == jour.Id).ForEach(s => crenauxNeeded.Add(s.CreneauDef.NoCreneau, s));
+
+            foreach (var s in tache.Creneaux.Where(s => s.CreneauDef.JourId == jour.Id)) {
+                crenauxNeeded.Add(s.CreneauDef.NoCreneau, s);
+            }
+
             int i = FIRST_PLAN_COLUMN;
 
             foreach (CreneauDef d in jour.CreneauDefs.OrderBy( s => s.NoCreneau))
@@ -172,7 +176,7 @@ namespace FestivArts.Utils
                     if (tacheLineCount >= crenauxNeeded[d.NoCreneau].NbBenevoleMax)
                     {
                         c.Style.Fill.BackgroundColor = XLColor.Black;
-                        c.Style.Fill.PatternBackgroundColor = XLColor.White;
+                        c.Style.Fill.PatternColor = XLColor.White;
                         c.Style.Fill.PatternType = XLFillPatternValues.DarkDown;
                     }
                     else if (tacheLineCount >= crenauxNeeded[d.NoCreneau].NbBenevoleMin)
